@@ -1,0 +1,112 @@
+\documentclass[twocolumn]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{draftwatermark}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage{titling}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{abstract}
+\usepackage[inkscapeformat=png]{svg}
+
+
+\usetikzlibrary{shapes,arrows,positioning,patterns,through}
+\SetWatermarkText{Preview}
+\SetWatermarkScale{1}
+\setlength\parskip{.5\baselineskip}
+
+\tikzset{
+  dot node/.style={
+    shape=circle,
+    fill=white,
+    draw,
+    inner sep=+0pt,
+    minimum size=+5mm
+  },
+  dotdot node/.style 2 args={
+    dot node,
+    label={[shape=circle,fill=black,outer sep=+0pt,inner sep=+0pt,minimum size=+3mm,name=ddd-#1,#2]center:}
+  },
+  arc style/.style={
+    |<->|,
+    shorten >=+-.5\pgflinewidth,
+    shorten <=+-.5\pgflinewidth,
+  }
+}
+
+\author{
+  Ryan J. Kung \\ ryankung@ieee.org
+}
+
+\title{The Ranking Protocol}
+
+\begin{document}
+\twocolumn[
+  \begin{@twocolumnfalse}
+
+\maketitle
+\begin{abstract}
+  This article introduces a reputation system for monitoring and evaluating the performance of nodes in a structured p2p network. The system is designed to promote good behavior and prevent cheating among nodes in the network. The reputation system is based on individual local rankings for each node, as well as global rankings generated through random sampling. The local rankings take into account the behavior of each node within its own network, while the global rankings provide a broader view of the behavior of nodes in the entire network.To ensure the robustness of the network, the reputation system uses reward proofs and punishment proofs. Nodes with good behavior are rewarded, while nodes with bad behavior are penalized. This helps to create an environment where nodes are incentivized to behave properly, and cheating is discouraged.
+  ~\\
+  ~\\
+\end{abstract}
+
+\end{@twocolumnfalse}
+]
+
+\section{Introduction and Motivation}
+The reputation system proposed in this article addresses the challenge of evaluating node performance and preventing cheating in structured p2p networks. It monitors node behavior through local and global rankings and uses reward and punishment proofs to incentivize proper behavior and discourage cheating. The system operates under the assumption of the Byzantine generals, where at least 2/3 of the nodes are honest. This helps to promote a healthy and robust network and provide secure and efficient services to users.
+
+\subsection{Local Ranking}
+
+Ranking protocol is inspired by Edonkey's Ranking Queue and uses a similar approach to monitor the performance of nodes in the network. The goal is to prevent cheating and denial of service and to maintain a healthy and robust network.
+
+We builds a measurement and local ranking system by establishing a mutual scoring system among nodes. The measurement system takes into account several metrics, including the success rate of requests sent, the validity rate of requests received, and the total number of successful interactions. These metrics help to provide a comprehensive view of a node's behavior and reliability.
+
+By having each node independently maintain the scores of surrounding nodes, by creates a decentralized and distributed local ranking system. This system allows for a more accurate and comprehensive view of a node's behavior and reliability, as it takes into account the observations of multiple nodes in the network.
+
+
+\subsection{Global Ranking}
+
+After obtaining the local ranking, we use a random sampling method to obtain the global ranking. The random sampling method is based on a decentralized random number oracle. The use of a decentralized random number oracle helps to ensure the fairness and impartiality of the global ranking. This helps to prevent any biases or manipulations in the global ranking, ensuring that nodes are evaluated fairly and accurately.
+\subsection{Reputation}
+
+The ranking protocol uses the reputation system to incentivize and ensure fair local and global rankings. The global ranking is generated through fair random sampling of the local ranking.
+
+The reputation system rewards nodes for good behavior and punishes nodes for bad behavior. This helps to incentivize nodes to behave properly and discourage cheating. The reputation system is designed to maintain a healthy and robust network by promoting fair and honest behavior among nodes.
+
+\section{Related Work}
+In the field of peer-to-peer networks, the edonkey Ranking Queue is a notable mechanism for measuring and evaluating the performance of nodes in the network. The Rings network uses a similar approach to the edonkey Ranking Queue to implement its local ranking system.
+
+One related work to the Rings network is the eDonkey network, which uses the edonkey Ranking Queue as its mechanism for evaluating node performance. The eDonkey network was one of the first peer-to-peer networks to use a mutual scoring system among nodes to evaluate node performance and prevent cheating or denial of service.
+
+Another related work is the Bittorrent network, which uses a mechanism called "choking" to prevent cheating or denial of service. The Bittorrent network evaluates node performance based on the speed and reliability of data transfers, and nodes that perform poorly are "choked" or restricted from receiving data from other nodes.
+
+Overall, the Ranking protocol is inspired by the edonkey Ranking Queue and other related works in the field of peer-to-peer networks. By using a mutual scoring system among nodes, the Rings network aims to provide a secure and efficient peer-to-peer network that can accurately evaluate node performance and prevent cheating or denial of service.
+
+\section{Sampling}
+\subsection{Randomness}
+\subsection{Reputation}
+
+\section{Gaming}
+
+\section{Conclusion}
+Overall, the Ranking protocol provides a comprehensive and effective solution for evaluating node performance and preventing cheating or denial of service in structured peer-to-peer networks. By using a mutual scoring system among nodes and a reputation system that incentivizes proper behavior, the Ranking protocol aims to provide a secure and efficient peer-to-peer network.
+
+\bibliographystyle{unsrt}
+\bibliography{./cites}
+\end{document}
