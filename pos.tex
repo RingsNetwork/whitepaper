@@ -51,8 +51,7 @@
 \author{
   Ryan J. Kung \\ ryankung@ieee.org
 }
-
-\title{The Ranking Protocol}
+\title{The dRanking Protocol}
 
 \begin{document}
 \twocolumn[
@@ -69,11 +68,11 @@
 ]
 
 \section{Introduction and Motivation}
-The reputation system proposed in this article addresses the challenge of evaluating node performance and preventing cheating in structured p2p networks. It monitors node behavior through local and global rankings and uses reward and punishment proofs to incentivize proper behavior and discourage cheating. The system operates under the assumption of the Byzantine generals, where at least 2/3 of the nodes are honest. This helps to promote a healthy and robust network and provide secure and efficient services to users.
+The reputation system proposed in this article addresses the challenge of evaluating node performance and preventing cheating in structured p2p networks. It monitors node behavior through local and global rankings and uses reward and punishment proofs to incentivize proper behavior and discourage cheating. The system operates under the assumption of the Byzantine generals, where at least 2/3 of the nodes are honest\cite{time}. This helps to promote a healthy and robust network and provide secure and efficient services to users.
 
 \subsection{Local Ranking}
 
-Ranking protocol is inspired by Edonkey's Ranking Queue and uses a similar approach to monitor the performance of nodes in the network. The goal is to prevent cheating and denial of service and to maintain a healthy and robust network.
+Ranking protocol is inspired by Edonkey's\cite{Edonkey} Ranking Queue and uses a similar approach to monitor the performance of nodes in the network. The goal is to prevent cheating and denial of service and to maintain a healthy and robust network.
 
 We builds a measurement and local ranking system by establishing a mutual scoring system among nodes. The measurement system takes into account several metrics, including the success rate of requests sent, the validity rate of requests received, and the total number of successful interactions. These metrics help to provide a comprehensive view of a node's behavior and reliability.
 
@@ -99,14 +98,153 @@ Another related work is the Bittorrent network, which uses a mechanism called "c
 Overall, the Ranking protocol is inspired by the edonkey Ranking Queue and other related works in the field of peer-to-peer networks. By using a mutual scoring system among nodes, the Rings network aims to provide a secure and efficient peer-to-peer network that can accurately evaluate node performance and prevent cheating or denial of service.
 
 \section{Sampling}
-\subsection{Randomness}
-\subsection{Reputation}
+
+The dRanking protocol effectuates a transformation from local ranking to global ranking through a random sampling procedure, which can be decomposed into four phases:
+
+\textbf{1. Generation of a random seed:}
+
+A random seed is generated to guarantee the randomness of the sampling procedure. The random seed is typically generated through a decentralized oracle to ensure a lack of centralization and bias in the generation process.
+
+\textbf{2. Determination of sampling targets:} Sampling targets are determined based on the local rankings and the randomly generated seed.
+
+\begin{algorithm}[htbp]
+  \caption{Systematic Sampling}
+  \label{samping}
+\begin{algorithmic}[1]
+\State $K \gets \lfloor \frac{2^n}{2^m} \rfloor$
+\State $r \gets$ random number between 0 and 1
+\State $s \gets \lfloor K \cdot r \rfloor$
+\State Select elements at positions $s, s + K, s + 2K, \dots$
+\end{algorithmic}
+\end{algorithm}
+
+
+We use simple Systematic samping algorithm \ref{samping} here, where n is the number of bits in the random number and m is the desired range of the random sample. The final result is a systematic sample of elements within the range (0, $2^m$).
+
+\textbf{3. Sampling process:} The elements in the local ranking are selected as a sample based on the determined sampling targets.
+
+Due to the potentially large number of nodes in a DHT\cite{Chord} network, it may not be possible to exactly locate the target in the sample processing stage. As a result, the sample processing becomes an approximation process, where the DHT network uses a lookup algorithm to find the peer closest to the sample target and provides proof of proximity.
+
+This is because the number of nodes in a DHT network can be extremely large, and it may not be feasible to store information about every node in the network. The lookup algorithm helps to mitigate this issue by finding the closest peer to the sample target, and the proof of proximity helps to ensure that the peer found is indeed close to the target.
+
+\begin{algorithm}[htbp]
+  \caption{Proof of Proximity using Bloom Filters\cite{bloom_filter}}
+  \label{bloom}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Target element $x$, Bloom filters $BF_1, BF_2, \dots, BF_n$ of nodes $N_1, N_2, \dots, N_n$ in the DHT network
+\State \textbf{Output:} Node $N_i$ with the closest proximity to target element $x$
+
+\State Initialize $max_bits = 0$ and $closest_node = \text{null}$
+\For{each node $N_i$ in the DHT network}
+\State $bits = \text{count(bits==1) in} BF_i \text{ correspond to } x$
+\If{$bits > max_bits$}
+\State $max_bits = bits$
+\State $closest_node = N_i$
+\EndIf
+\EndFor
+\State \textbf{return} $closest_node$
+\end{algorithmic}
+\end{algorithm}
+
+We use Bloom filters to provide proof of proximity in a DHT network. By representing the elements stored at each node as a set of bits in a Bloom filter, the proximity of nodes to a target element can be estimated based on the number of common bits in their Bloom filters. The node with the highest number of bits set to 1 in its Bloom filter is considered the closest node to the target element, and the number of common bits can be used as proof of proximity.
+
+Algorithm \ref{bloom} shows how using Bloom filters to provide proof of proximity in a DHT network, This algorithm takes as input the target element $x$ and the Bloom filters of the nodes in the DHT network. It counts the number of bits set to 1 in each Bloom filter that correspond to the target element, and selects the node with the highest number of bits set to 1 as the node with the closest proximity to the target element. The output is the node with the closest proximity to the target element, which can be used as proof of proximity.
+
+\textbf{4. Validation of sampling results:} The sampling results are validated to confirm their representativeness of the true order of elements in the queue.
+
+We use Kolmogorov-Smirnov(K-S) test to check the result data of sampling is normally distributed. The KS test works by comparing the empirical cumulative distribution function (CDF) of the data with the theoretical CDF of the normal distribution. K-S is described as:
+Let $F_{n}(x)$ be the empirical cumulative distribution function (CDF) of a sample of size $n$, and let $F(x)$ be the theoretical CDF of the normal distribution. The Kolmogorov-Smirnov test statistic is defined as:
+
+\begin{equation}
+D = \sup_{x} \left| F_{n}(x) - F(x) \right|
+\end{equation}
+
+where $\sup$ represents the supremum, or the least upper bound. The value of $D$ measures the maximum difference between the empirical and theoretical CDFs, and is used to determine whether the data is normally distributed.
+
+The null hypothesis of the KS test is that the data is normally distributed, and the alternative hypothesis is that the data is not normally distributed. The test statistic $D$ is compared to critical values from the KS distribution to determine whether to reject or fail to reject the null hypothesis. If the test statistic is greater than the critical value, the null hypothesis is rejected, and the data is considered not to be normally distributed.
+
+And the algorithm can be present as \ref{ks}
+
+\begin{algorithm}[htbp]
+\caption{Kolmogorov-Smirnov Test}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Sample data $x_1, x_2, \dots, x_n$
+\State \textbf{Output:} Test statistic $D$ and decision on normality of data
+
+\State Calculate the empirical cumulative distribution function (CDF) $F_{n}(x)$ for the sample data
+\State Calculate the theoretical cumulative distribution function (CDF) $F(x)$ for the normal distribution
+\State Calculate the test statistic $D$ using the formula:
+\begin{equation}
+D = \sup_{x} \left| F_{n}(x) - F(x) \right|
+\end{equation}
+\State Compare the test statistic $D$ to critical values from the KS distribution
+\If{$D \leq critical_value$}
+\State \textbf{return} "Data is normally distributed", $D$
+\Else
+\State \textbf{return} "Data is not normally distributed", $D$
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+This algorithm calculates the empirical and theoretical CDFs for the sample data and the normal distribution, and calculates the test statistic $D$ as the maximum difference between the empirical and theoretical CDFs. The test statistic is then compared to critical values from the KS distribution to determine whether the data is normally distributed or not. The algorithm returns the test statistic and a decision on the normality of the data.
+
 
 \section{Gaming}
+Let's consider the scenario where individuals are able to repeatedly calculate their global rank until they are satisfied with the outcome. This raises two questions: 1) Will the repeated sampling by the sampler result in a significant increase in network traffic, and 2) Will the sampled individuals be willing to disclose their accurate local rank.
+\subsection{Rank maximize}
 
+In each sampling, it is assumed that the initial attitude of the nodes is neutral, but as the requests increase, they may become negative. A rank $n$ that follows a normal distribution will be produced for each sampling. However, the maximum value of the normal distribution may decrease in subsequent samplings. This means that if the sampler continues to sample, the expected value of the result may decrease.
+
+In this scenario, if the sampler wants to achieve the highest result possible, it may need to adjust the number and timing of samplings based on a comprehensive understanding of the normal distribution. This requires statistical analysis of the mean and variance of the distribution to evaluate different strategies and choose the most optimal one.
+
+\begin{align}
+  \max_x \quad & n \\
+  \text{subject to} \quad & g_i(x) \leq 0, \quad i = 1, \dots, m \\
+  & h_j(x) = 0, \quad j = 1, \dots, p
+\end{align}
+
+In this model, x is a vector of variables that represent the actions taken by A, n is the objective function to be maximized, $g_i(x)$ represents the inequality constraints, and $h_j(x)$ represents the equality constraints. The goal is to find the values of x that maximize n subject to the constraints.
+
+\subsection{Self-interest}
+We use a Guess the Median\cite{game_theory} method to build a game between the sampled nodes, for the sampled objects, the sampled nodes need to have enough motivation to participate, which means rewards, but also means the possibility of cheating. Therefore, we only reward nodes that are close to the Median.
+
+In this game, each player has two strategies: to guess a number that is higher than the median, or to guess a number that is lower than the median. Let's denote the strategy of guessing a number that is higher than the median as H, and the strategy of guessing a number that is lower than the median as L.
+
+The game matrix for Guess the Median would then look like this:
+
+\begin{figure}[htbp]
+  \begin{center}
+\begin{tabular}{c|c|c}
+ & H & L \\ \hline
+H & 0 & 1 \\ \hline
+L & -1 & 0
+\end{tabular}
+  \end{center}
+
+\caption{Two player median}
+\end{figure}
+
+In this matrix, the rows represent the first player's strategy, and the columns represent the second player's strategy. The entries in the matrix represent the outcome for each strategy combination, with 1 representing a win for the first player, -1 representing a win for the second player.
+
+This game has two Nash equilibria points.
+
+Let $x_1$ and $x_2$ be the strategies chosen by Player 1 and Player 2, respectively, where $x_i$ is equal to 0 if the player chooses to guess a number less than 50, and equal to 1 if the player chooses to guess a number greater than 50. The Nash Equilibrium is then given by the solution to the following system of equations:
+\begin{equation}
+  x_1 = \arg\max_{x_1 \in \{0,1\}} \min(x_2, 0.5)\\
+\end{equation}
+
+\begin{equation}
+x_2 = \arg\max_{x_2 \in \{0,1\}} \min(x_1, 0.5)
+\end{equation}
+
+As we can see, in the case of mutual ignorance, the Nash Equilibrium will push the result towards the 50\% position of the total, which is a safe neutral result for the players. But in fact, nodes on the network each have their own local ranking, so this is not actually a Nash Equilibrium, but a Correlated Equilibrium. In this scenario, we can safely return to the Byzantine assumption that when 2/3 of the people are honest, we will obtain the correct global rank.
+
+\subsection{Reward and Slash Proofs}
+Of course, limiting the number of samples by maximizing profits is an invisible big hand, and we still need visible hard boundaries to control user behavior. Therefore, we will introduce a penalty mechanism. The ranking obtained by the user each time will be locked for a period in the distributed ledger, and during this period it can be reported by any other node and deducted from the ranking, and the reporting node also uses ranking sampling to perform slash.
+
+Both rewards and punishments are based on Sample proofs, and they should contain signatures generated by the sampled node using cryptographic algorithms. For rewards, it will claim its token through the distributed ledger, while for punishments, it will slash others' tokens, both of which can have a lock-up period.
 \section{Conclusion}
 Overall, the Ranking protocol provides a comprehensive and effective solution for evaluating node performance and preventing cheating or denial of service in structured peer-to-peer networks. By using a mutual scoring system among nodes and a reputation system that incentivizes proper behavior, the Ranking protocol aims to provide a secure and efficient peer-to-peer network.
-
 \bibliographystyle{unsrt}
 \bibliography{./cites}
 \end{document}
