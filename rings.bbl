@@ -1,0 +1,125 @@
+\begin{thebibliography}{10}
+
+\bibitem{Kshetri2014}
+J.~Kshetri.
+\newblock Data privacy and security risks of cloud computing for consumers.
+\newblock {\em International Journal of Information Management},
+  34(6):607--615, Dec 2014.
+
+\bibitem{Kokkonen2018}
+E.~Kokkonen and A.~Porras.
+\newblock Data privacy and security in cloud computing: a review of the
+  state-of-the-art.
+\newblock {\em Computer Science Review}, 28:21--38, Oct 2018.
+
+\bibitem{G2016}
+M.~R. Grimaila.
+\newblock A comparison of data privacy regulations: the eu and the us.
+\newblock {\em Journal of International Commerce, Economics and Policy},
+  7(3):1--27, 2016.
+
+\bibitem{tim}
+Tim Berners-Lee.
+\newblock Internet is dying.
+\newblock [Online; accessed 5-Feb-2023].
+
+\bibitem{si}
+James~Dale Davidson and William Rees-Mogg.
+\newblock The sovereign individual: Mastering the transition to the information
+  age, 1997.
+
+\bibitem{webrtc-standard}
+{Internet Engineering Task Force}.
+\newblock {WebRTC: Real-Time Communications between Browsers}, 2021.
+\newblock Work in Progress.
+
+\bibitem{webassembly}
+WebAssembly~Community Group.
+\newblock {WebAssembly}, 2017.
+
+\bibitem{DIDs}
+Decentralized identifiers (dids).
+\newblock Accessed: 2023-02-05.
+
+\bibitem{Ethereum}
+Gavin Wood.
+\newblock A next-generation smart contract and decentralized application
+  platform, 2014.
+
+\bibitem{Bitcoin}
+Satoshi Nakamoto.
+\newblock Bitcoin: A peer-to-peer electronic cash system, 2008.
+
+\bibitem{Solana}
+Solana Team.
+\newblock Solana: A high-performance blockchain for decentralized applications,
+  2018.
+
+\bibitem{Chord}
+D.~Karger M. F.~Kaashoek I.~Stoica, R.~Morris and H.~Balakrishnan.
+\newblock Chord: A scalable peer-to-peer lookup service for internet
+  applications.
+\newblock \url{https://dl.acm.org/doi/10.1145/383059.383071}, 2001.
+
+\bibitem{ElGamalEncryption}
+T.~ElGamal.
+\newblock A public-key cryptosystem and a signature scheme based on discrete
+  logarithms.
+\newblock \url{https://ieeexplore.org/abstract/4726576}, 1985.
+
+\bibitem{ssss}
+A.~Shamir.
+\newblock How to share a secret.
+\newblock \url{https://link.springer.com/article/10.1007/BF00185039}, 1979.
+
+\bibitem{zkp}
+S.~Micali S.~Goldwasser and C.~Rackoff.
+\newblock The knowledge complexity of interactive proof systems.
+\newblock \url{https://dl.acm.org/doi/10.1145/74242.74243}, 1989.
+
+\bibitem{amp}
+D.~Chaum and J.~van Antwerpen.
+\newblock The author-merlin protocol.
+\newblock \url{https://link.springer.com/article/10.1007/BF02577056}, 1990.
+
+\bibitem{Edonkey}
+Edonkey~Development Team.
+\newblock Edonkey: A decentralized file sharing system.
+\newblock {\em International Journal of Distributed Systems}, 5(4):280--290,
+  2003.
+
+\bibitem{IPFS}
+Juan Benet.
+\newblock Interplanetary file system: A p2p file system for the next web.
+\newblock {\em Proceedings of the 24th International Conference on World Wide
+  Web}, pages 1149--1160, 2015.
+
+\bibitem{Libp2p}
+M.~Castro J.~R.~Etheridge and I.~Stoica.
+\newblock Libp2p: A modular network stack for p2p systems.
+\newblock {\em USENIX Association Conference on Networked Systems Design and
+  Implementation}, 14:1--15, 2017.
+
+\bibitem{Kademlia}
+Petar Maymounkov and David Mazières.
+\newblock Kademlia: A peer-to-peer information system based on the xor metric.
+\newblock {\em International Workshop on Peer-to-Peer Systems}, pages 53--65,
+  2002.
+
+\bibitem{ENR}
+Ethereum node records (enrs).
+\newblock \url{https://eips.ethereum.org/EIPS/eip-778}, 2021.
+\newblock Accessed: 2023-02-05.
+
+\bibitem{TCP_IP}
+W.~Richard Stevens and Gary~R. Wright.
+\newblock {\em TCP/IP Illustrated, Volume 1: The Protocols}.
+\newblock Addison-Wesley Professional, Reading, MA, USA, 1994.
+
+\bibitem{Actor_Model}
+Carl Hewitt.
+\newblock A universal modular actor formalism for artificial intelligence.
+\newblock {\em IEEE Transactions on Systems, Man, and Cybernetics},
+  3(1):70--80, 1973.
+
+\end{thebibliography}

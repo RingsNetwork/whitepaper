@@ -1,0 +1,65 @@
+\begin{thebibliography}{10}
+
+\bibitem{W3C-DID-Core}
+W3C.
+\newblock Decentralized identifiers (dids) v1.0.
+\newblock \url{https://w3c.github.io/did-core/}, 2021.
+
+\bibitem{dns}
+P.~Mockapetris.
+\newblock A name service for the internet.
+\newblock pages 39--49, 1983.
+
+\bibitem{webassembly}
+WebAssembly~Community Group.
+\newblock {WebAssembly}, 2017.
+
+\bibitem{si}
+James~Dale Davidson and William Rees-Mogg.
+\newblock The sovereign individual: Mastering the transition to the information
+  age, 1997.
+
+\bibitem{W3C-DID-Use-Cases}
+W3C.
+\newblock Decentralized identifiers (dids) use cases and requirements v1.0.
+\newblock \url{https://w3c.github.io/did-use-cases/}, 2021.
+
+\bibitem{chord}
+D.~Karger M. F.~Kaashoek I.~Stoica, R.~Morris and H.~Balakrishnan.
+\newblock Chord: A scalable peer-to-peer lookup service for internet
+  applications.
+\newblock \url{https://dl.acm.org/doi/10.1145/383059.383071}, 2001.
+
+\bibitem{TorNetwork}
+Nick~Mathewson Roger~Dingledine and Paul Syverson.
+\newblock Tor: The second-generation onion router.
+\newblock {\em ACM Transactions on Computer Systems}, 22(3):303--327, 2004.
+
+\bibitem{webrtc-standard}
+{Internet Engineering Task Force}.
+\newblock {WebRTC: Real-Time Communications between Browsers}, 2021.
+\newblock Work in Progress.
+
+\bibitem{Ethereum}
+Gavin Wood.
+\newblock A next-generation smart contract and decentralized application
+  platform, 2014.
+
+\bibitem{IPFS}
+Juan Benet.
+\newblock Interplanetary file system: A p2p file system for the next web.
+\newblock {\em Proceedings of the 24th International Conference on World Wide
+  Web}, pages 1149--1160, 2015.
+
+\bibitem{ElGamalEncryption}
+T.~ElGamal.
+\newblock A public-key cryptosystem and a signature scheme based on discrete
+  logarithms.
+\newblock \url{https://ieeexplore.org/abstract/4726576}, 1985.
+
+\bibitem{eth-atomic-swap}
+Confio.
+\newblock eth-atomic-swap.
+\newblock \url{https://github.com/confio/eth-atomic-swap}, 2021.
+
+\end{thebibliography}
