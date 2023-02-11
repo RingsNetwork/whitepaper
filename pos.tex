@@ -59,7 +59,9 @@
 
 \maketitle
 \begin{abstract}
-  This article introduces a reputation system for monitoring and evaluating the performance of nodes in a structured p2p network. The system is designed to promote good behavior and prevent cheating among nodes in the network. The reputation system is based on individual local rankings for each node, as well as global rankings generated through random sampling. The local rankings take into account the behavior of each node within its own network, while the global rankings provide a broader view of the behavior of nodes in the entire network.To ensure the robustness of the network, the reputation system uses reward proofs and punishment proofs. Nodes with good behavior are rewarded, while nodes with bad behavior are penalized. This helps to create an environment where nodes are incentivized to behave properly, and cheating is discouraged.
+  This article presents a comprehensive reputation system for monitoring and evaluating the performance of nodes in a structured peer-to-peer (P2P) network. The system aims to foster responsible behavior and deter cheating among network participants.
+
+The reputation system is comprised of two main components: local rankings and global rankings. Local rankings reflect the behavior of each node within its own network, while global rankings provide a comprehensive view of the behavior of all nodes in the entire network. To ensure the system's reliability, it utilizes reward proofs and punishment proofs. Nodes exhibiting good behavior are rewarded, while nodes engaging in undesirable actions are penalized, thus creating an environment where nodes are motivated to act ethically and cheating is discouraged.
   ~\\
   ~\\
 \end{abstract}
@@ -68,20 +70,31 @@
 ]
 
 \section{Introduction and Motivation}
-The reputation system proposed in this article addresses the challenge of evaluating node performance and preventing cheating in structured p2p networks. It monitors node behavior through local and global rankings and uses reward and punishment proofs to incentivize proper behavior and discourage cheating. The system operates under the assumption of the Byzantine generals, where at least 2/3 of the nodes are honest\cite{time}. This helps to promote a healthy and robust network and provide secure and efficient services to users.
+The reputation system presented in this article aims to address the issue of monitoring node performance and preventing cheating in structured peer-to-peer (P2P) networks. By combining local and global rankings, the system provides a comprehensive evaluation of node behavior. The use of reward and punishment proofs incentivizes responsible behavior and discourages cheating, helping to maintain a healthy and secure network.
+
+The system operates under the assumption of the Byzantine generals problem, where at least 2/3 of the nodes are assumed to be honest, as described in the literature \cite{time}. This helps to ensure the robustness and security of the network, allowing it to provide reliable and efficient services to users. Overall, the proposed reputation system represents a significant step forward in the development of secure and efficient structured P2P networks.
 
 \subsection{Local Ranking}
+The ranking protocol used in this system is inspired by Edonkey's Ranking Queue \cite{Edonkey}, and adopts a similar approach for monitoring node performance in the network. The objective is to prevent cheating, denial of service, and to maintain a healthy and secure network.
 
-Ranking protocol is inspired by Edonkey's\cite{Edonkey} Ranking Queue and uses a similar approach to monitor the performance of nodes in the network. The goal is to prevent cheating and denial of service and to maintain a healthy and robust network.
+The system includes a mutual scoring system among nodes, which forms the basis of the measurement and local ranking system. The measurement system considers multiple metrics, such as the success rate of sent requests, the validity rate of received requests, and the total number of successful interactions. These metrics provide a comprehensive evaluation of a node's behavior and reliability.
 
-We builds a measurement and local ranking system by establishing a mutual scoring system among nodes. The measurement system takes into account several metrics, including the success rate of requests sent, the validity rate of requests received, and the total number of successful interactions. These metrics help to provide a comprehensive view of a node's behavior and reliability.
-
-By having each node independently maintain the scores of surrounding nodes, by creates a decentralized and distributed local ranking system. This system allows for a more accurate and comprehensive view of a node's behavior and reliability, as it takes into account the observations of multiple nodes in the network.
-
+By having each node maintain the scores of surrounding nodes independently, the system creates a decentralized and distributed local ranking system. This approach allows for a more accurate and comprehensive evaluation of node behavior and reliability, as it takes into account observations from multiple nodes in the network.
 
 \subsection{Global Ranking}
+The local rankings are used to generate the global ranking through a random sampling method. The random sampling method is based on a decentralized random number oracle, which ensures the fairness and impartiality of the global ranking. The use of a decentralized random number oracle helps to prevent any biases or manipulations in the ranking, ensuring that nodes are evaluated objectively and accurately.
 
-After obtaining the local ranking, we use a random sampling method to obtain the global ranking. The random sampling method is based on a decentralized random number oracle. The use of a decentralized random number oracle helps to ensure the fairness and impartiality of the global ranking. This helps to prevent any biases or manipulations in the global ranking, ensuring that nodes are evaluated fairly and accurately.
+The dRanking protocol implements the transformation from local ranking to global ranking through a four-phase random sampling procedure.
+
+In the first phase, a random seed is generated to ensure the randomness of the sampling procedure and is typically generated by a decentralized oracle to eliminate centralization and bias.
+
+In the second phase, the sampling targets are determined based on the local rankings and the random seed, using a systematic sampling algorithm.
+
+In the third phase, the sample is selected from the local rankings based on the determined sampling targets, and a lookup algorithm is used to find the closest node to the target and provide proof of proximity using Bloom filters.
+
+In the fourth phase, the validity of the sampling results is confirmed through a Kolmogorov-Smirnov (K-S) test to determine if the data is normally distributed. The K-S test compares the empirical cumulative distribution function of the data with the theoretical cumulative distribution function of the normal distribution, and returns a test statistic and a decision on the normality of the data.
+
+
 \subsection{Reputation}
 
 The ranking protocol uses the reputation system to incentivize and ensure fair local and global rankings. The global ranking is generated through fair random sampling of the local ranking.
@@ -89,13 +102,14 @@ The ranking protocol uses the reputation system to incentivize and ensure fair l
 The reputation system rewards nodes for good behavior and punishes nodes for bad behavior. This helps to incentivize nodes to behave properly and discourage cheating. The reputation system is designed to maintain a healthy and robust network by promoting fair and honest behavior among nodes.
 
 \section{Related Work}
-In the field of peer-to-peer networks, the edonkey Ranking Queue is a notable mechanism for measuring and evaluating the performance of nodes in the network. The Rings network uses a similar approach to the edonkey Ranking Queue to implement its local ranking system.
 
-One related work to the Rings network is the eDonkey network, which uses the edonkey Ranking Queue as its mechanism for evaluating node performance. The eDonkey network was one of the first peer-to-peer networks to use a mutual scoring system among nodes to evaluate node performance and prevent cheating or denial of service.
+The edonkey Ranking Queue is a well-known mechanism in the peer-to-peer network community for evaluating node performance. The Rings network adopts a similar approach to the edonkey Ranking Queue to implement its local ranking system.
 
-Another related work is the Bittorrent network, which uses a mechanism called "choking" to prevent cheating or denial of service. The Bittorrent network evaluates node performance based on the speed and reliability of data transfers, and nodes that perform poorly are "choked" or restricted from receiving data from other nodes.
+One relevant work is the eDonkey network, which uses the edonkey Ranking Queue as its mechanism for monitoring node performance. The eDonkey network was one of the earliest peer-to-peer networks to use a mutual scoring system among nodes to prevent cheating or denial of service.
 
-Overall, the Ranking protocol is inspired by the edonkey Ranking Queue and other related works in the field of peer-to-peer networks. By using a mutual scoring system among nodes, the Rings network aims to provide a secure and efficient peer-to-peer network that can accurately evaluate node performance and prevent cheating or denial of service.
+Another related work is the Bittorrent network, which utilizes a mechanism called "choking" to prevent cheating or denial of service. The Bittorrent network evaluates node performance based on the speed and reliability of data transfers, and nodes that perform poorly are restricted from receiving data from other nodes.
+
+In conclusion, the ranking protocol used in the Rings network draws inspiration from the edonkey Ranking Queue and other related works in the peer-to-peer network field. By using a mutual scoring system among nodes, the Rings network aims to provide a secure and efficient peer-to-peer network that can accurately evaluate node performance and prevent cheating or denial of service.
 
 \section{Sampling}
 
@@ -192,10 +206,9 @@ This algorithm calculates the empirical and theoretical CDFs for the sample data
 \section{Gaming}
 Let's consider the scenario where individuals are able to repeatedly calculate their global rank until they are satisfied with the outcome. This raises two questions: 1) Will the repeated sampling by the sampler result in a significant increase in network traffic, and 2) Will the sampled individuals be willing to disclose their accurate local rank.
 \subsection{Rank maximize}
+To optimize the results of the sampling process, the sampler must consider the normal distribution generated by the ranking protocol. As the number of requests made by nodes increases, the maximum value of the normal distribution may decrease. To achieve the highest result possible, the sampler must adjust the number and timing of samplings based on a thorough understanding of the normal distribution.
 
-In each sampling, it is assumed that the initial attitude of the nodes is neutral, but as the requests increase, they may become negative. A rank $n$ that follows a normal distribution will be produced for each sampling. However, the maximum value of the normal distribution may decrease in subsequent samplings. This means that if the sampler continues to sample, the expected value of the result may decrease.
-
-In this scenario, if the sampler wants to achieve the highest result possible, it may need to adjust the number and timing of samplings based on a comprehensive understanding of the normal distribution. This requires statistical analysis of the mean and variance of the distribution to evaluate different strategies and choose the most optimal one.
+To determine the most optimal strategy, statistical analysis of the mean and variance of the normal distribution is necessary. This allows the sampler to evaluate different strategies and choose the one that will provide the best results. By performing this analysis, the sampler can optimize the results of the sampling process and achieve the most accurate global ranking.
 
 \begin{align}
   \max_x \quad & n \\
@@ -214,35 +227,48 @@ The game matrix for Guess the Median would then look like this:
 
 \begin{figure}[htbp]
   \begin{center}
-\begin{tabular}{c|c|c}
- & H & L \\ \hline
-H & 0 & 1 \\ \hline
-L & -1 & 0
-\end{tabular}
+    \begin{tabular}{c|cc} & H & L \\ \hline H & R & S \\ L & T & P \\ \end{tabular}
   \end{center}
 
 \caption{Two player median}
 \end{figure}
 
-In this matrix, the rows represent the first player's strategy, and the columns represent the second player's strategy. The entries in the matrix represent the outcome for each strategy combination, with 1 representing a win for the first player, -1 representing a win for the second player.
+where R is the reward for both players guessing higher than the median, S is the cost for one player guessing higher and the other guessing lower, T is the cost for both players guessing lower than the median, and P is the reward for one player guessing higher and the other guessing lower.
 
-This game has two Nash equilibria points.
+In this game, the median is considered the Nash Equilibrium, meaning that neither player has an incentive to deviate from their current strategy as long as the other player stays the same. This ensures that both players are motivated to participate and incentivizes honest behavior.
 
-Let $x_1$ and $x_2$ be the strategies chosen by Player 1 and Player 2, respectively, where $x_i$ is equal to 0 if the player chooses to guess a number less than 50, and equal to 1 if the player chooses to guess a number greater than 50. The Nash Equilibrium is then given by the solution to the following system of equations:
-\begin{equation}
-  x_1 = \arg\max_{x_1 \in \{0,1\}} \min(x_2, 0.5)\\
-\end{equation}
+This game can be applied to the nodes in the network to incentivize honest and accurate reporting of their local rankings. The nodes that accurately report their rankings and are close to the median will be rewarded, while nodes that cheat or deviate from the correct rankings will be penalized.
 
-\begin{equation}
-x_2 = \arg\max_{x_2 \in \{0,1\}} \min(x_1, 0.5)
-\end{equation}
+\subsection{Sample weight}
+Once nodes obtain the Global Rank, we can calculate their weight based on the Global Rank of the sampled nodes during the sampling process, with higher Global Rank of the sampled objects having a higher weight.
 
-As we can see, in the case of mutual ignorance, the Nash Equilibrium will push the result towards the 50\% position of the total, which is a safe neutral result for the players. But in fact, nodes on the network each have their own local ranking, so this is not actually a Nash Equilibrium, but a Correlated Equilibrium. In this scenario, we can safely return to the Byzantine assumption that when 2/3 of the people are honest, we will obtain the correct global rank.
-
+To handle the network's cold start problem, initially, all Global Ranks are set to 0. In order to jumpstart the ranking process, a set of initial high-ranking nodes are introduced to facilitate credit transfer. These nodes are assigned a high Global Rank and their ranking is used as a reference for other nodes to calculate their own Global Rank in subsequent samples. This allows for a gradual increase in the Global Rank of other nodes as they participate in the sampling process and receive rewards based on their proximity to the median.
 \subsection{Reward and Slash Proofs}
-Of course, limiting the number of samples by maximizing profits is an invisible big hand, and we still need visible hard boundaries to control user behavior. Therefore, we will introduce a penalty mechanism. The ranking obtained by the user each time will be locked for a period in the distributed ledger, and during this period it can be reported by any other node and deducted from the ranking, and the reporting node also uses ranking sampling to perform slash.
 
-Both rewards and punishments are based on Sample proofs, and they should contain signatures generated by the sampled node using cryptographic algorithms. For rewards, it will claim its token through the distributed ledger, while for punishments, it will slash others' tokens, both of which can have a lock-up period.
+This way, the system can have both financial incentives and deterrents to maintain the accuracy and reliability of the rankings. The locking mechanism also helps to prevent malicious behavior and cheating, as nodes would have to consider the consequences of their actions before participating in the ranking system. The use of cryptographic signatures and the distributed ledger further enhances the security and transparency of the system. Overall, the combination of rewards, punishments, and locking mechanisms creates a balanced system that incentivizes nodes to contribute to the accuracy and reliability of the ranking system while also deterring malicious behavior.
+
+\section{Economics}
+
+It is generally desirable for Rankings to deflate, as this increases their value. To achieve this, the Rankings need to be made payable, allowing users to use them to purchase services or participate in liquidity staking.
+
+As Sampling continues, the average value of the network's Rankings will increase and the total supply of Rankings will become larger, causing the unit value of Rankings to decrease. To counteract this, the supply within a single Sample Round should be fixed, requiring the results of Sampling to be revealed at a later time. Participants can estimate the quality of their Sample results, but cannot determine their specific value. With a fixed supply, the growth of Rankings becomes linear. As the network grows, obtaining high Rankings becomes more difficult, and so it is suggested that the supply should have a positive correlation with the network size. This means that for each Sample Round, the number of participating nodes $n_i$ and the total supply $s_i$ are established. When $n_i > n_{i-1}$, $s_i$ should be greater than $s_{i-1}$.
+
+\begin{figure}[htbp]
+  \label{supply}
+\begin{align}
+  S_i &= \sum_{i=0}^{i}knc_i\\
+  \Delta S &= S_i - S_{i-1} = knc_i\\
+  \Delta V &= \frac{knc_i}{S}
+ \end{align}
+\end{figure}
+
+The figure \ref{supply} illustrates the alteration of the total supply and the value of the token.
+
+And to realize deflation, it is necessary to make the Ranking payable, which typically implies that users are able to utilize it to purchase services or participate in liquidity staking.
+
+Another approach to achieve deflation is to periodically halve the fixed supply of Rankings, similar to how Bitcoin operates. This method ensures a controlled and predictable reduction in the overall supply of Rankings, thereby increasing its unit value over time.
+
+
 \section{Conclusion}
 Overall, the Ranking protocol provides a comprehensive and effective solution for evaluating node performance and preventing cheating or denial of service in structured peer-to-peer networks. By using a mutual scoring system among nodes and a reputation system that incentivizes proper behavior, the Ranking protocol aims to provide a secure and efficient peer-to-peer network.
 \bibliographystyle{unsrt}
