@@ -183,7 +183,7 @@ The Rings Network architecture is modeled after the well-established seven-layer
 
 \subsection{Runtime Layer}
 
-The design goal of Rings Network is to enable nodes to run in any environment, including browsers, mobile devices, Linux, Mac, Windows, etc. To achieve this, we have adopted a cross patform compile approach to build the code. For non-browser environments, we use pure Rust implementation that is independent of any system APIs, making our native implementation system agnostic. For browser environments, we compile the pure Rust implementation to WebAssembly (Wasm) and use web-sys, js-sys, and wasm-bindgen to glue it together, making our nodes fully functional in the browser.
+The design goal of Rings Network is to enable nodes to run in any environment, including browsers, mobile devices, Linux, Mac, Windows, etc. To achieve this, we have adopted a cross platform compile approach to build the code. For non-browser environments, we use pure Rust implementation that is independent of any system APIs, making our native implementation system agnostic. For browser environments, we compile the pure Rust implementation to WebAssembly (Wasm) and use web-sys, js-sys, and wasm-bindgen to glue it together, making our nodes fully functional in the browser.
 
 
 WebAssembly, or WASM, is a low-level binary format for executing code in web browsers. It provides a way for developers to write high-performance code in languages such as C, C++, and Rust, and then run that code in a browser with native performance. WebAssembly is designed to be fast and efficient, with a compact binary format that is easy to parse and execute. It uses a low-level instruction set, which makes it well-suited for demanding tasks such as cryptography, compression, and image processing.
@@ -284,39 +284,14 @@ Once the WebRTC handshake is complete, browsers can send and receive data stream
 \end{figure}
 
 \subsection{Network Layer}
-Rings Network is a structured peer-to-peer network that includes a distributed hash table (DHT) that uses the Chord algorithm to implement its lookup function. By utilizing the Chord algorithm, Rings Network enables efficient and scalable lookups in its DHT, allowing it to effectively route messages and store key-value pairs in a peer-to-peer network. The use of the Chord algorithm helps ensure that the DHT in Rings Network is highly available and can handle the large number of nodes and requests typical in large-scale peer-to-peer networks.
 
-The Chord algorithm is a distributed hash table (DHT) lookup protocol that provides a decentralized way to store and retrieve data in a peer-to-peer network. It works by assigning keys to nodes in the network using a hash function and using a logical ring topology to efficiently route queries and updates in the network.
+The Rings Network is a structured peer-to-peer network that incorporates a distributed hash table (DHT) to facilitate efficient and scalable lookups. The Chord algorithm is utilized to implement the lookup function within the DHT, thereby enabling effective routing of messages and storage of key-value pairs in a peer-to-peer setting. The use of a DHT, incorporating the Chord algorithm, guarantees high availability in the Rings Network, which is critical for handling the substantial number of nodes and requests typically present in large-scale peer-to-peer networks.
 
-Each node in the Chord network is responsible for a range of keys, and it maintains a finger table that contains information about other nodes in the network. This allows a node to quickly find the node responsible for a given key and forward the query to that node. If the node receiving the query is not responsible for the key in question, it will forward the query to the next node in the ring until the responsible node is found.
+Each node in the Rings Network is assigned a range of keys and maintains a finger table containing information about other nodes in the network. This allows for quick determination of the node responsible for a given key and facilitates the forwarding of queries to the appropriate node. The nodes and keys within the network are arranged in an identifier ring, which has at most $2^m$ nodes, ranging from 0 to $2^m-1$. The identifier ring provides a convenient method for mapping keys to nodes, and each node in the identifier ring has a successor and a predecessor. The successor of a node is the next node in the identifier ring in a clockwise direction, while the predecessor is the previous node in a counter-clockwise direction.
 
-%origin
-Each node has a successor and a predecessor. The successor to a node is the next node in the identifier
-circle in a clockwise direction. The predecessor is counter-clockwise. If there is a node for each
-possible ID, the successor of node 0 is node 1, and the predecessor of node 0 is node ;$2m − 1$
-however, normally there are "holes" in the sequence. For example, the successor of node 153 may be
-node 167 (and nodes from 154 to 166 do not exist); in this case, the predecessor of node 167 will be
-node 153.
+To maintain the robustness of the network in the event of node failures or departures, each node records a segment of the ring adjacent to it, including the preceding and following nodes. This results in a high probability that a node will be able to accurately locate its successor or predecessor, even in networks that experience a high failure rate. The information regarding the closest successor or predecessor of a node is stored in the finger table maintained by each node.
 
-The concept of successor can be used for keys as well. The successor node of a key is the first node𝑘
-whose ID equals to or follows in the identifier circle, denoted by $successor(k)$. Every key is assigned to (stored at) its successor node, so looking up a key is to query $successor(k)$.
-
-Since the successor (or predecessor) of a node may disappear from the network (because of failure or
-departure), each node records a whole segment of the circle adjacent to it, i.e., the $r$ nodes preceding it
-and the nodes following it. This list results in a high probability that a node is able to correctly𝑟
-locate its successor or predecessor, even if the network in question suffers from a high failure rate.
-
-The core usage of the Chord protocol is to query a key from a client (generally a node as well), i.e. to
-find $successor(k)$. The basic approach is to pass the query to a node's successor if it cannot find the
-key locally. This will lead to an query time where is the number of machines in the ring.
-
-To avoid the linear search above, Chord implements a faster search method by requiring each node to
-keep a finger table containing up to entries, recalling that is the number of bits in the hash key.
-The $i^{th}$ entry of node will contain $successor(n+2^{i-1})$. The first entry of the finger table
-is actually the node's immediate successor (and therefore an extra successor field is not needed).
-Every time a node wants to look up a key $k$, it will pass the query to the closest successor or
-predecessor (depending on the finger table) of in its finger table (the "largest" one on the circle𝑘
-whose ID is smaller than ), until a node finds out the key is stored in its immediate successor.
+The Rings Network implements a more efficient search method to reduce query times and improve lookup efficiency. When a node seeks to look up a key, it forwards the query to the closest successor or predecessor of the key, as determined by the information stored in its finger table, until the key is found. This approach, similar to the approach employed by The algorithm, reduces the number of nodes that must be traversed to locate the responsible node, providing a scalable and efficient solution for data storage and retrieval within a peer-to-peer network.
 
 In this way, the Chord algorithm provides a scalable and efficient way to store and retrieve data in a peer-to-peer network. The use of the hash function and finger table allow for efficient routing of queries and updates, while the decentralized nature of the network ensures high availability and robustness against node failures.
 
@@ -348,13 +323,11 @@ In this way, the Chord algorithm provides a scalable and efficient way to store 
     \node (\i) [circle,fill=white,draw=black,thick] at (-\i*\deltadegree+90:\S) {\i};
   \end{tikzpicture}
     \end{center}
-
+    \label{dht}
       \caption{Chord algorithm, lookup protocol}
 
     \end{figure}
-
-
-    In the DHT, all nodes are able to observe their own predecessor and successor through the join algorithm and stabilizationization algorithm. a node's predecessor is the node with the largest DID that precedes the DID of the current node in the DID space. A node's successor is the node with the smallest identifier that follows the identifier of the current node in the identifier space. These two nodes form the immediate neighbor nodes for a given node in the network.
+In the DHT, as illustrated in Figure \ref{dht}, all nodes have the capability to perceive their own predecessor and successor through the implementation of the join algorithm and stabilizationization algorithm. The predecessor of a node is determined as the node with the largest identifier that precedes the identifier of the current node in the identifier space. Conversely, the successor of a node is defined as the node with the smallest identifier that follows the identifier of the current node in the identifier space. These two nodes, the predecessor and the successor, are considered the immediate neighbor nodes of a particular node within the network.
 
 \subsection{Protocol Layer}
 
