@@ -94,7 +94,7 @@ In the first phase, a random seed is generated to ensure the randomness of the s
 
 In the second phase, the sampling targets are determined based on the local rankings and the random seed, using a systematic sampling algorithm.
 
-In the third phase, the sample is selected from the local rankings based on the determined sampling targets, and a lookup algorithm is used to find the closest node to the target and provide proof of randomness using entropy test.
+In the third phase, the sample is selected from the local rankings based on the determined sampling targets, and a lookup algorithm is used to find the closest node to the target and provide proof of randomness using entropy test\cite{entropy}.
 
 In the fourth phase, the validity of the sampling results is confirmed through a Kolmogorov-Smirnov (K-S) test to determine if the data is normally distributed. The K-S test compares the empirical cumulative distribution function of the data with the theoretical cumulative distribution function of the normal distribution, and returns a test statistic and a decision on the normality of the data.
 
@@ -351,7 +351,7 @@ The game can also be represented using a game matrix as \ref{bayes mat}. In this
 There are two Nash equilibria in this game: (Show I, Show I, Show I) and (Hide I, Hide I, Hide I). In the first Nash equilibrium, all players reveal the information since this is the only choice that results in the maximum payoff for all players. In the second Nash equilibrium, all players keep the information hidden since revealing it would result in a loss for the player who does not reveal it.
 
 \subsection{Distributed Game}
-If we assume that 2/3 of the players are honest, then the game becomes a variant of the Majority-vote game. This game has been extensively studied in the field of distributed computing and fault tolerance, where it is used as a model for solving consensus problems in distributed systems. In this game, each player can choose to vote for one of two options, and the goal is to determine the majority vote.
+If we assume that 2/3 of the players are honest, then the game becomes a variant of the Majority-vote \cite{mjv} game. This game has been extensively studied in the field of distributed computing and fault tolerance, where it is used as a model for solving consensus problems in distributed systems. In this game, each player can choose to vote for one of two options, and the goal is to determine the majority vote.
 
 The Byzantine Generals' Problem is a specific instance of the Majority-vote game, where some players may be malicious or faulty and try to manipulate the outcome of the game. In this variant of the game, the players may have different beliefs about the number of honest players, and this may affect their strategies.
 
@@ -405,11 +405,13 @@ In this model, x is a vector of variables that represent the actions taken by A,
 Once nodes obtain the Global Rank, we can calculate their weight based on the Global Rank of the sampled nodes during the sampling process, with higher Global Rank of the sampled objects having a higher weight.
 
 To handle the network's cold start problem, initially, all Global Ranks are set to 0. In order to jumpstart the ranking process, a set of initial high-ranking nodes are introduced to facilitate credit transfer. These nodes are assigned a high Global Rank and their ranking is used as a reference for other nodes to calculate their own Global Rank in subsequent samples. This allows for a gradual increase in the Global Rank of other nodes as they participate in the sampling process and receive rewards based on their proximity to the median.
+
 \subsection{Reward and Slash Proofs}
 
 This way, the system can have both financial incentives and deterrents to maintain the accuracy and reliability of the rankings. The locking mechanism also helps to prevent malicious behavior and cheating, as nodes would have to consider the consequences of their actions before participating in the ranking system. The use of cryptographic signatures and the distributed ledger further enhances the security and transparency of the system. Overall, the combination of rewards, punishments, and locking mechanisms creates a balanced system that incentivizes nodes to contribute to the accuracy and reliability of the ranking system while also deterring malicious behavior.
 
 \section{Economics}
+
 
 It is generally desirable for Rankings to deflate, as this increases their value. To achieve this, the Rankings need to be made payable, allowing users to use them to purchase services or participate in liquidity staking.
 
@@ -424,12 +426,9 @@ As Sampling continues, the average value of the network's Rankings will increase
  \end{align}
 \end{figure}
 
-The figure \ref{supply} illustrates the alteration of the total supply and the value of the token.
+The figure \ref{supply} illustrates the alteration of the total supply and the value of the token.And to realize deflation, it is necessary to make the Ranking payable, which typically implies that users are able to utilize it to purchase services or participate in liquidity staking.
 
-And to realize deflation, it is necessary to make the Ranking payable, which typically implies that users are able to utilize it to purchase services or participate in liquidity staking.
-
-Another approach to achieve deflation is to periodically halve the fixed supply of Rankings, similar to how Bitcoin operates. This method ensures a controlled and predictable reduction in the overall supply of Rankings, thereby increasing its unit value over time.
-
+Another approach to achieve deflation is to periodically halve the fixed supply of Rankings, similar to how Bitcoin\cite{bitcoin} operates. This method ensures a controlled and predictable reduction in the overall supply of Rankings, thereby increasing its unit value over time.
 
 \section{Conclusion}
 Overall, the Ranking Protoocol provides a comprehensive and effective solution for evaluating node performance and preventing cheating or denial of service in structured peer-to-peer networks. By using a mutual scoring system among nodes and a reputation system that incentivizes proper behavior, the Ranking Protoocol aims to provide a secure and efficient peer-to-peer network.
