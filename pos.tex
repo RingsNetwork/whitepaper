@@ -350,7 +350,7 @@ The game can also be represented using a game matrix as \ref{bayes mat}. In this
 
 There are two Nash equilibria in this game: (Show I, Show I, Show I) and (Hide I, Hide I, Hide I). In the first Nash equilibrium, all players reveal the information since this is the only choice that results in the maximum payoff for all players. In the second Nash equilibrium, all players keep the information hidden since revealing it would result in a loss for the player who does not reveal it.
 
-\subsection{Distributed Gaming}
+\subsection{Distributed Game}
 If we assume that 2/3 of the players are honest, then the game becomes a variant of the Majority-vote game. This game has been extensively studied in the field of distributed computing and fault tolerance, where it is used as a model for solving consensus problems in distributed systems. In this game, each player can choose to vote for one of two options, and the goal is to determine the majority vote.
 
 The Byzantine Generals' Problem is a specific instance of the Majority-vote game, where some players may be malicious or faulty and try to manipulate the outcome of the game. In this variant of the game, the players may have different beliefs about the number of honest players, and this may affect their strategies.
@@ -374,7 +374,13 @@ B chooses Y & $(\frac{1}{9}, \frac{1}{3}, 0)$ & $(\frac{2}{9}, \frac{2}{9}, 0)$ 
 
 The game matrix for this game would look like this \ref{dgame}, each row and column represents a player's strategy, and the numbers in each cell represent the payoffs for the three players. The first row and first column correspond to player A's strategy choices, the second row and column correspond to player B's strategy choices, and the third row and column correspond to player C's strategy choices.
 
-In this game, due to the consideration of the Byzantine assumption, its Nash equilibrium is that all nodes will tend to remain honest.
+For this distributed game, we need to find the best responses for each player and then determine if there exists a Nash equilibrium solution.
+
+First, we consider the best response for player B. If player A chooses X, then the best response for player B is to choose X, because $(\frac{4}{9}, \frac{4}{9}, \frac{4}{9})$ is better than $(\frac{1}{9}, \frac{1}{3}, 0)$. If player A chooses Y, then the best response for player B is to choose Y, because $(\frac{2}{9}, \frac{2}{9}, 0)$ is better than $(\frac{1}{9}, \frac{1}{9}, \frac{1}{9})$. Therefore, player B will choose the same strategy as player A.
+
+Next, we consider the best response for player A. If player B chooses X, then the best response for player A is to choose X, because $(\frac{4}{9}, \frac{4}{9}, \frac{4}{9})$ is better than $(\frac{1}{9}, \frac{1}{9}, \frac{1}{9})$. If player B chooses Y, then the best response for player A is to choose Y, because $(\frac{2}{9}, \frac{2}{9}, 0)$ is better than $(\frac{1}{9}, \frac{1}{3}, 0)$. Therefore, player A will also choose the same strategy as player B.
+
+Therefore, In this game, due to the consideration of the Byzantine assumption, the unique Nash equilibrium solution is when player A and player B both choose X, which corresponds to a payoff of $(\frac{4}{9}, \frac{4}{9}, \frac{4}{9})$, that all nodes will tend to remain honest.
 
 
 \subsection{Rank maximize}
