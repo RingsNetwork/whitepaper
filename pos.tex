@@ -94,7 +94,7 @@ In the first phase, a random seed is generated to ensure the randomness of the s
 
 In the second phase, the sampling targets are determined based on the local rankings and the random seed, using a systematic sampling algorithm.
 
-In the third phase, the sample is selected from the local rankings based on the determined sampling targets, and a lookup algorithm is used to find the closest node to the target and provide proof of proximity using Bloom filters.
+In the third phase, the sample is selected from the local rankings based on the determined sampling targets, and a lookup algorithm is used to find the closest node to the target and provide proof of randomness using entropy test.
 
 In the fourth phase, the validity of the sampling results is confirmed through a Kolmogorov-Smirnov (K-S) test to determine if the data is normally distributed. The K-S test compares the empirical cumulative distribution function of the data with the theoretical cumulative distribution function of the normal distribution, and returns a test statistic and a decision on the normality of the data.
 
@@ -136,37 +136,32 @@ A random seed is generated to guarantee the randomness of the sampling procedure
 \end{algorithmic}
 \end{algorithm}
 
-
 We use simple Systematic samping algorithm \ref{samping} here, where n is the number of bits in the random number and m is the desired range of the random sample. The final result is a systematic sample of elements within the range (0, $2^m$).
 
 \textbf{3. Sampling process:} The elements in the local ranking are selected as a sample based on the determined sampling targets.
 
-Due to the potentially large number of nodes in a DHT\cite{Chord} network, it may not be possible to exactly locate the target in the sample processing stage. As a result, the sample processing becomes an approximation process, where the DHT network uses a lookup algorithm to find the peer closest to the sample target and provides proof of proximity.
-
-This is because the number of nodes in a DHT network can be extremely large, and it may not be feasible to store information about every node in the network. The lookup algorithm helps to mitigate this issue by finding the closest peer to the sample target, and the proof of proximity helps to ensure that the peer found is indeed close to the target.
-
 \begin{algorithm}[htbp]
-  \caption{Proof of Proximity using Bloom Filters\cite{bloom_filter}}
-  \label{bloom}
 \begin{algorithmic}[1]
-\State \textbf{Input:} Target element $x$, Bloom filters $BF_1, BF_2, \dots, BF_n$ of nodes $N_1, N_2, \dots, N_n$ in the DHT network
-\State \textbf{Output:} Node $N_i$ with the closest proximity to target element $x$
-
-\State Initialize $max_bits = 0$ and $closest_node = \text{null}$
-\For{each node $N_i$ in the DHT network}
-\State $bits = \text{count(bits==1) in} BF_i \text{ correspond to } x$
-\If{$bits > max_bits$}
-\State $max_bits = bits$
-\State $closest_node = N_i$
+\Require{Data sequence $S$}
+\Ensure{Whether the input data is random or not}
+\State Calculate the frequency $f_i$ of each character in $S$
+\State Calculate the entropy $H(S)$ using Shannon entropy or Renyi entropy formula
+\State Calculate the expected entropy $H_{exp}$ based on the length of $S$ and the size of the character set
+\If{$|H(S)-H_{exp}|<\epsilon$}
+\State \Return{True}
+\Else
+\State \Return{False}
 \EndIf
-\EndFor
-\State \textbf{return} $closest_node$
 \end{algorithmic}
+\label{entropy}
+\caption{Entropy Testing Algorithm}
 \end{algorithm}
 
-We use Bloom filters to provide proof of proximity in a DHT network. By representing the elements stored at each node as a set of bits in a Bloom filter, the proximity of nodes to a target element can be estimated based on the number of common bits in their Bloom filters. The node with the highest number of bits set to 1 in its Bloom filter is considered the closest node to the target element, and the number of common bits can be used as proof of proximity.
 
-Algorithm \ref{bloom} shows how using Bloom filters to provide proof of proximity in a DHT network, This algorithm takes as input the target element $x$ and the Bloom filters of the nodes in the DHT network. It counts the number of bits set to 1 in each Bloom filter that correspond to the target element, and selects the node with the highest number of bits set to 1 as the node with the closest proximity to the target element. The output is the node with the closest proximity to the target element, which can be used as proof of proximity.
+
+Due to the potentially large number of nodes in a DHT\cite{Chord} network, it may not be possible to exactly locate the target in the sample processing stage. As a result, the sample processing becomes an approximation process, where the DHT network uses a lookup algorithm to find the peer closest to the sample target and provides proof of proximity.
+
+This is because for most DHT implementations, such as KAD and Chord, it is impossible to have random ID collisions. Therefore, during the sampling process, the triggered lookup protocol can only get as close as possible to the sampled position. For our $[r_i,.., r_n]$ random numbers, we will obtain $[(id_i, r_i, .., id_n, r_n)]$ through the DHT lookup algorithm. At this point, we will use entropy testing \ref{entropy} to prove that the distance difference $\Delta_i$ between the sampled nodes and the sampling target has randomness, where $\Delta_i = did_i - r_i$.
 
 \textbf{4. Validation of sampling results:} The sampling results are validated to confirm their representativeness of the true order of elements in the queue.
 
@@ -181,7 +176,6 @@ where $\sup$ represents the supremum, or the least upper bound. The value of $D$
 
 The null hypothesis of the KS test is that the data is normally distributed, and the alternative hypothesis is that the data is not normally distributed. The test statistic $D$ is compared to critical values from the KS distribution to determine whether to reject or fail to reject the null hypothesis. If the test statistic is greater than the critical value, the null hypothesis is rejected, and the data is considered not to be normally distributed.
 
-And the algorithm can be present as \ref{ks}
 
 \begin{algorithm}[htbp]
 \caption{Kolmogorov-Smirnov Test}
@@ -202,27 +196,21 @@ D = \sup_{x} \left| F_{n}(x) - F(x) \right|
 \State \textbf{return} "Data is not normally distributed", $D$
 \EndIf
 \end{algorithmic}
+\label{ks}
 \end{algorithm}
+
+And the algorithm can be present as \textbf{algorithm \ref{ks}}.
 
 This algorithm calculates the empirical and theoretical CDFs for the sample data and the normal distribution, and calculates the test statistic $D$ as the maximum difference between the empirical and theoretical CDFs. The test statistic is then compared to critical values from the KS distribution to determine whether the data is normally distributed or not. The algorithm returns the test statistic and a decision on the normality of the data.
 
 
-\section{Gaming}
-Let's consider the scenario where individuals are able to repeatedly calculate their global rank until they are satisfied with the outcome. This raises two questions: 1) Will the repeated sampling by the sampler result in a significant increase in network traffic, and 2) Will the sampled individuals be willing to disclose their accurate local rank.
-\subsection{Rank maximize}
-To optimize the results of the sampling process, the sampler must consider the normal distribution generated by the ranking protocol. As the number of requests made by nodes increases, the maximum value of the normal distribution may decrease. To achieve the highest result possible, the sampler must adjust the number and timing of samplings based on a thorough understanding of the normal distribution.
+\section{Ranking game}
 
-To determine the most optimal strategy, statistical analysis of the mean and variance of the normal distribution is necessary. This allows the sampler to evaluate different strategies and choose the one that will provide the best results. By performing this analysis, the sampler can optimize the results of the sampling process and achieve the most accurate global ranking.
 
-\begin{align}
-  \max_x \quad & n \\
-  \text{subject to} \quad & g_i(x) \leq 0, \quad i = 1, \dots, m \\
-  & h_j(x) = 0, \quad j = 1, \dots, p
-\end{align}
+For the sampled nodes, we need to introduce a reward mechanism to encourage them to be honest. We will use the median of the sampling results and reward the nodes closest to the median. This will introduce a series of games, and we will analyze them from multiple aspects, including the median game, the complete information game, the incomplete information game, and the game based on the Byzantine generals problem.
 
-In this model, x is a vector of variables that represent the actions taken by A, n is the objective function to be maximized, $g_i(x)$ represents the inequality constraints, and $h_j(x)$ represents the equality constraints. The goal is to find the values of x that maximize n subject to the constraints.
+\subsection{Guess the Median}
 
-\subsection{Self-interest}
 We use a Guess the Median\cite{game_theory} method to build a game between the sampled nodes, for the sampled objects, the sampled nodes need to have enough motivation to participate, which means rewards, but also means the possibility of cheating. Therefore, we only reward nodes that are close to the Median.
 
 In this game, each player has two strategies: to guess a number that is higher than the median, or to guess a number that is lower than the median. Let's denote the strategy of guessing a number that is higher than the median as H, and the strategy of guessing a number that is lower than the median as L.
@@ -242,6 +230,170 @@ where R is the reward for both players guessing higher than the median, S is the
 In this game, the median is considered the Nash Equilibrium, meaning that neither player has an incentive to deviate from their current strategy as long as the other player stays the same. This ensures that both players are motivated to participate and incentivizes honest behavior.
 
 This game can be applied to the nodes in the network to incentivize honest and accurate reporting of their local rankings. The nodes that accurately report their rankings and are close to the median will be rewarded, while nodes that cheat or deviate from the correct rankings will be penalized.
+
+\subsection{Complete Information game}
+When nodes need to decide whether to be honest during sampling, this problem can be simplified into a complete information game. In a complete information game, each player has complete information, including the strategy choices and payoff functions of other players. Therefore, each node knows whether other nodes are behaving honestly during the sampling process, as well as the rewards and payoffs of other nodes.
+
+Assuming that each player can only choose one of two strategies, "Be honset" (X) or "not be honest" (Y), and the payoffs are as follows:
+
+\begin{figure}[htbp]
+\begin{tabular}{c|cc}
+& \textbf{Player C X} & \textbf{Player C Y} \\
+\hline
+\textbf{Player A} & (1,1,1) & (0,0,1) \\
+\textbf{Player B} & (1,1,1) & (0,0,1) \\
+\textbf{Player C} & (1,1,1) & (1,0,1) \\
+\end{tabular}
+\end{figure}
+
+In this matrix, the first number in each cell represents the payoff for Player A, the second number represents the payoff for Player B, and the third number represents the payoff for Player C. For example, if all three players choose strategy X, then each player will get a payoff of 1, as indicated in the top left cell.
+
+If all players choose H, each player gets a payoff of 1. If two players choose H and one player chooses C, the two players who choose H get a payoff of 1, while the player who chooses C gets a payoff of 0. If all players choose C, each player gets a payoff of 1.
+
+In this game, there are two pure strategy Nash equilibria, which are (X, X, X) and (Y, Y, Y). If all players choose to either reveal or conceal the information, then none of them can improve their payoff by changing their strategy. In addition, there is a mixed strategy Nash equilibrium in which each player randomly chooses the two strategies with equal probability, which results in each player getting an expected payoff of 2/3.
+
+It's worth noting that the payoffs for all players are the same in both pure strategy Nash equilibria, and each player gets a higher payoff than in the mixed strategy Nash equilibrium. However, the mixed strategy Nash equilibrium is also a valid solution concept in game theory, and it may be a more realistic description of what happens when the players are uncertain about each other's strategies or preferences.
+
+
+\subsection{Bayesian game}
+
+In the game above, we assumed that the information was complete, and each node knew how others would act, so the outcome of the game was that they would either all choose honestly or all cheat, which is similar to the Byzantine Generals Problem. In fact, the game process could also be an incomplete information game, which is a Bayesian game, where each node is uncertain about whether the other nodes know information I.
+
+If each player does not know which strategy the other players have chosen, the game becomes an asymmetric information game, also known as a Bayesian game. In this case, we can use an extended game matrix to represent each player's strategies and possible payoffs.
+
+To simplify the problem, let's assume that each player knows information I, but does not know whether the other players know this information. In this case, each player has two information sets: knowing information I and not knowing information I. Each information set has two strategies: showing information I and hiding information I. Therefore, each player has four possible strategy combinations.
+
+\begin{figure}[H]
+\begin{tikzpicture}[  level distance=2.2cm,  level 1/.style={sibling distance=6cm},  level 2/.style={sibling distance=3cm},  level 3/.style={sibling distance=1.5cm},  grow=right,  font=\footnotesize,  edge from parent/.style={draw,-latex},  every node/.style={draw, rounded corners, align=center},  ]
+
+  \node {}
+  child {
+    node {Knows I}
+    child {
+      node {Show I \\ (1,1,1)}
+      child {
+        node {Show I \\ (1,1,1)}
+        edge from parent node[above] {A}
+      }
+      child {
+        node {Hide I \\ (0,0,1)}
+        edge from parent node[above] {B}
+      }
+      edge from parent node[above] {C}
+    }
+    child {
+      node {Hide I \\ (0,0,1)}
+      child {
+        node {Show I \\ (1,1,1)}
+        edge from parent node[above] {A}
+      }
+      child {
+        node {Hide I \\ (0,0,1)}
+        edge from parent node[above] {B}
+      }
+      edge from parent node[above] {C}
+    }
+    edge from parent node[above] {A}
+  }
+  child {
+    node {Doesn't Know I}
+    child {
+      node {Show I \\ (1,1,1)}
+      child {
+        node {Show I \\ (1,1,1)}
+        edge from parent node[above] {A}
+      }
+      child {
+        node {Hide I \\ (1,0,1)}
+        edge from parent node[above] {B}
+      }
+      edge from parent node[above] {C}
+    }
+    child {
+      node {Hide I \\ (0,0,1)}
+      child {
+        node {Show I \\ (1,1,1)}
+        edge from parent node[above] {A}
+      }
+      child {
+        node {Hide I \\ (1,0,1)}
+        edge from parent node[above] {B}
+      }
+      edge from parent node[above] {C}
+    }
+    edge from parent node[above] {A}
+  };
+\end{tikzpicture}
+\caption{Bayesian Game}
+\label{bayes}
+\end{figure}
+
+To represent each player's possible payoffs, we can use a set of tree diagrams, where each node represents a possible decision point, each edge represents a player's decision, and each leaf node represents each player's possible payoff. In this context, we can draw the following game tree:
+
+In this game tree \ref{bayes}, each player has two information sets represented by circles. Each information set has two strategies represented by squares. Each leaf node represents each player's possible payoff, where the first number represents Player A's payoff, the second number represents Player B's payoff, and the third number represents Player C's payoff. For example, if Player A chooses to show information I while Player B and Player C both choose to hide information I, then Player A's payoff is 0, while Player B and Player C both receive a payoff of 1.
+
+\begin{figure}[htbp]
+\begin{tabular}{c|cc}
+& Show I & Hide I \\
+\hline
+Show I & 1, 1, 1 & 0, 1, 1 \\
+Hide I & 1, 0, 1 & 1, 1, 0 \\
+Show I & 1, 1, 1 & 0, 1, 1 \\
+  Hide I & 1, 0, 1 & 1, 1, 0 \\
+\end{tabular}
+  \label{bayes mat}
+  \caption{Bayesian Game Matrix}
+\end{figure}
+
+
+The game can also be represented using a game matrix as \ref{bayes mat}. In this matrix, each row and column represents a player's strategy, and the numbers in each cell represent the payoffs for the three players. The first row and first column correspond to player A's strategy choices, the second row and column correspond to player B's strategy choices, and the third row and column correspond to player C's strategy choices.
+
+There are two Nash equilibria in this game: (Show I, Show I, Show I) and (Hide I, Hide I, Hide I). In the first Nash equilibrium, all players reveal the information since this is the only choice that results in the maximum payoff for all players. In the second Nash equilibrium, all players keep the information hidden since revealing it would result in a loss for the player who does not reveal it.
+
+\subsection{Distributed Gaming}
+If we assume that 2/3 of the players are honest, then the game becomes a variant of the Majority-vote game. This game has been extensively studied in the field of distributed computing and fault tolerance, where it is used as a model for solving consensus problems in distributed systems. In this game, each player can choose to vote for one of two options, and the goal is to determine the majority vote.
+
+The Byzantine Generals' Problem is a specific instance of the Majority-vote game, where some players may be malicious or faulty and try to manipulate the outcome of the game. In this variant of the game, the players may have different beliefs about the number of honest players, and this may affect their strategies.
+
+If we assume that 2/3 of the people are honest, then each player may assume that the other players are honest with a probability of 2/3, which is a reasonable assumption. Based on this assumption, each player may be more inclined to reveal the information I, as it is the optimal strategy for all players and the other players may also choose to reveal the information.
+
+However, each player's optimal strategy will also depend on their level of trust in the other players. If a player believes that the other players are not sufficiently honest, they may be more inclined to keep the information I hidden to avoid being deceived or harmed by the other players. Therefore, the players' strategies will depend on their beliefs about the other players' strategies, and whether they think the other players are likely to reveal the information or keep it hidden.
+
+\begin{figure}[htbp]
+  \begin{center}
+\begin{tabular}{c|cc}
+& A chooses X & A chooses Y \\
+\hline
+B chooses X & $(\frac{4}{9}, \frac{4}{9}, \frac{4}{9})$ & $(\frac{1}{9}, \frac{1}{9}, \frac{1}{9})$ \\
+B chooses Y & $(\frac{1}{9}, \frac{1}{3}, 0)$ & $(\frac{2}{9}, \frac{2}{9}, 0)$ \\
+\end{tabular}
+\end{center}
+\label{dgame}
+\caption{Distributed game}
+\end{figure}
+
+The game matrix for this game would look like this \ref{dgame}, each row and column represents a player's strategy, and the numbers in each cell represent the payoffs for the three players. The first row and first column correspond to player A's strategy choices, the second row and column correspond to player B's strategy choices, and the third row and column correspond to player C's strategy choices.
+
+In this game, due to the consideration of the Byzantine assumption, its Nash equilibrium is that all nodes will tend to remain honest.
+
+
+\subsection{Rank maximize}
+
+
+Let's consider the scenario where individuals are able to repeatedly calculate their global rank until they are satisfied with the outcome. This raises two questions: 1) Will the repeated sampling by the sampler result in a significant increase in network traffic, and 2) Will the sampled individuals be willing to disclose their accurate local rank.
+
+To optimize the results of the sampling process, the sampler must consider the normal distribution generated by the ranking protocol. As the number of requests made by nodes increases, the maximum value of the normal distribution may decrease. To achieve the highest result possible, the sampler must adjust the number and timing of samplings based on a thorough understanding of the normal distribution.
+
+To determine the most optimal strategy, statistical analysis of the mean and variance of the normal distribution is necessary. This allows the sampler to evaluate different strategies and choose the one that will provide the best results. By performing this analysis, the sampler can optimize the results of the sampling process and achieve the most accurate global ranking.
+
+\begin{align}
+  \max_x \quad & n \\
+  \text{subject to} \quad & g_i(x) \leq 0, \quad i = 1, \dots, m \\
+  & h_j(x) = 0, \quad j = 1, \dots, p
+\end{align}
+
+In this model, x is a vector of variables that represent the actions taken by A, n is the objective function to be maximized, $g_i(x)$ represents the inequality constraints, and $h_j(x)$ represents the equality constraints. The goal is to find the values of x that maximize n subject to the constraints.
+
 
 \subsection{Sample weight}
 Once nodes obtain the Global Rank, we can calculate their weight based on the Global Rank of the sampled nodes during the sampling process, with higher Global Rank of the sampled objects having a higher weight.
