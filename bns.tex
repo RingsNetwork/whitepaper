@@ -54,18 +54,18 @@
   \and
   Architect of Rings Network \\ 0xca@ringsnetwork.io
 }
-
-\title{BNS - A Sovereign DNS Based on Rings Network}
+\title{BNS - A Segregated Network System for Bitcoin}
 
 \begin{document}
 \twocolumn[
   \begin{@twocolumnfalse}
 
 \maketitle
-    \begin{abstract}
+\begin{abstract}
 
-This paper presents a DID method\cite{W3C-DID-Core} built with dDNS\cite{dns}(distributed DNS) and a new data transfer infrastructure based on Rings Network. Rings Network is a peer-to-peer network based on Chord algorithm it can be used to provide extendable DNS service and secure network traffic for traditional web2 and web3 applications on blockchains. The nodes of Rings Network can run on servers and in browsers(as WebAssembly\cite{webassembly}) and nodes in browsers and servers are functionally equivalent. This paper will describe how to implement DID proofs, DID Controller, and scalable DID Document based on Rings Network and demonstrate some possibilities of the application layer, such as utilizing the convenience of BNS for MPC and atomic swaps.
+  BNS is a proposed system that aims to enhance the Bitcoin network by introducing a structured peer-to-peer network based on Distributed Hash Tables (DHTs), providing DHT storage capabilities and DID services\cite{W3C-DID-Core}. BNS is developed using Rings\cite{rings}, a modern browser-native P2P network that implements the Chord algorithm, which can provide extendable DNS services and secure network traffic for web2 and web3 applications on blockchains. Rings Network can be run on servers and browsers using WebAssembly\cite{webassembly}, with both nodes being functionally equivalent.
 
+This paper delves into the technical aspects of BNS, including its architecture, protocols, and algorithms, and highlights potential use cases for the system. Additionally, this paper presents the implementation of DID proofs, DID Controller, and scalable DID Document using Rings Network and showcases how the system's convenience can be utilized for applications such as MPC and atomic swaps.
 
   ~\\
   ~\\
@@ -75,52 +75,46 @@ This paper presents a DID method\cite{W3C-DID-Core} built with dDNS\cite{dns}(di
 ]
 
 \section{Introduction and Motivation}
-The increasing centralization of the internet is partly due to the loss of data sovereignty\cite{si} by individuals, which is reflected in the data monopolies of corporations and governments, as well as the fundamental architectural problem of the DNS system on the internet. The centralized structure of the current DNS system makes it susceptible to various security and privacy concerns, as well as scalability issues. Despite attempts to address these challenges with solutions like dDNS and DNSSEC, they have fallen short of providing a complete solution.
 
 
-The issues stem from two primary considerations: first, the need to eliminate centralized resolution, where trust in decentralized proofs is preferred over reliance on central authorities when a subject asserts ownership of a domain; and second, the requirement to eliminate centralized services, where it is desired that the services hosted on the domain also become fully decentralized.
+Bitcoin was created in 2009 by an anonymous individual or group known as Satoshi Nakamoto\cite{nakamoto2008bitcoin}. The Bitcoin network operates as a decentralized and unstructured peer-to-peer network, with nodes communicating through a gossip protocol\cite{bano2017consensus}. In this protocol, nodes broadcast messages to their neighbors, and these messages propagate throughout the entire network. This distributed communication allows for a trustless and transparent ledger of transactions, without the need for a central authority\cite{antonopoulos2014mastering}.
 
-Therefore, we propose BNS, a decentralized domain name system based on Rings Network and blockchain technology. It consists of two parts, a chain-based resolution system based on smart contracts, and a DID interaction system based on Rings Network.
+Because the Bitcoin network is unstructured, it can be challenging to implement end-to-end message routing\cite{bano2017consensus}. To address this limitation, a newer version of the blockchain technology was developed, it features a built-in structured Distributed Hash Table (DHT) network and a virtual machine (VM) for more powerful scripting capabilities\cite{wood2014ethereum}. These additions allow for improved message routing and the execution of more complex smart contracts\cite{buterin2014ethereum}, and it's Ethereum.
 
-\subsection{Distributed DNS}
+Despite its advantages over Bitcoin, it still faces challenges. One issue is the problem of state explosion, which can cause the network to become slower and more expensive to use as more data is added to the blockchain\cite{wood2014ethereum}. Additionally, it's network implementation is based on the Kademlia algorithm, which makes it difficult to implement broadcast over the network\cite{gervais2016security}. These challenges have prompted research into alternative blockchain designs that can address these issues while still providing the benefits of decentralized and secure ledger systems.
 
-Accessing a host on the Internet typically involves two steps: domain name resolution and accessing the corresponding service. Traditionally, each of these steps is centralized. BNS aims to decentralize this process by offering decentralized domain name registration based on a distributed ledger and utilizing the Rings Network for domain name lookup and routing. The Rings Network is a peer-to-peer end-to-end network that is used to lookup the associated service for a domain name and ensure the privacy of traffic and decentralization of hosted services.
+Bitcoin was originally designed as a decentralized and secure ledger system, and it should ideally be used only for that purpose. However, as the technology has evolved, there have been attempts to expand its functionality to include storage, oracles, smart contracts, and other network-layer features. To prevent unintentional transaction malleability in Bitcoin, a separate system called BNS (Bitcoin Network System) has been introduced. BNS is built on top of the Bitcoin network and includes a structured peer-to-peer network based on Distributed Hash Tables (DHTs), DID services, and DHT storage capabilities. BNS also implements the Rings Network, which provides extendable DNS services and secure network traffic for traditional web2 and web3 applications on blockchains. With BNS, these additional functionalities can be integrated securely and without interfering with the integrity of the Bitcoin ledger.
 
-The figure \ref{dht} depicts the prototype of the Rings DHT, which enables the resolution of domains into various services, including direct messages with users, hosted websites, and provided services, among others.
+\subsection{Browser-native P2P network}
 
-\begin{figure*}[]
+BNS aims to enhance the Bitcoin network by enabling interoperability with other systems. This is achieved by providing a structured peer-to-peer network based on Distributed Hash Tables (DHTs) that is browser-native and can run on both servers and browsers using WebAssembly. The Rings Network, which implements the Chord algorithm, is used to provide extendable DNS services and secure network traffic for web2 and web3 applications on blockchains. By providing a structured network layer that can communicate with other systems, BNS enables greater interoperability and opens up new possibilities for the use of Bitcoin as a secure and decentralized ledger system.
+
+\subsection{Distributed Name Services}
+\begin{figure*}[H]
   \label{dht}
   \includegraphics[width=\linewidth]{imgs/1.png}
   \caption{DHT Prototype.}
 \end{figure*}
 
+In addition to its DID capabilities, BNS also provides a distributed name service that is based on the ownership of a secp256k1 private key. This naming service allows users to register and manage human-readable names that can be used to represent complex blockchain addresses or other cryptographic identifiers. By associating these names with specific private keys, BNS provides a way for users to easily manage their blockchain identities and simplify the process of interacting with decentralized applications. The distributed nature of the naming service ensures that there is no central point of control, providing enhanced security and decentralization.
+
+The figure \ref{dht} depicts the prototype of the Rings DHT, which enables the resolution of domains into various services, including direct messages with users, hosted websites, and provided services, among others.
 
 
-\subsection{DID Methods}
 
-With the assistance of Rings Network, BNS has the potential to be the most powerful DID (Decentralized Identifier) method in history. According to the definition of DID in W3C's DID use case, a DID should meet the following four requirements:
-
-\begin{itemize}[itemsep=2pt,topsep=0pt,parsep=0pt]
-\item    decentralized: there should be no central issuing agency;
-\item    persistent: the identifier should be inherently persistent, not requiring the continued operation of an underling organization;
-\item    cryptographically verifiable: it should be possible to prove control of the identifier cryptographically;
-\item    resolvable: it should be possible to discover metadata about the identifier.
-\end{itemize}
-
-Despite the large number of experimental DID method specifications (103) and implementations (32)\cite{W3C-DID-Use-Cases}, there are very few DIDs that have passed the DID test cases. Out of the 17 Ethereum-related DIDs (etho, ethr, ens, erc725, etc.), only ethr has met the standards set by the W3C for DIDs.
-
-The BNS is a new DID (Decentralized Identifier) Method, with its DID schema specified as follows: did:bns:<protocol>:<did>.btc. The suffix "btc" represents the domain name extension of BNS, while the "protocol" component supports a variety of services, including HTTP, IM, and wallet.
-
-\subsection{DID Proofs}
-DID proofs refer to how the relationship between the did controller and the did document is proved. For some DIDs such as ENS (although they do not pass the standard, we discuss them as such because of the widespread interest), the did document refers to what the user writes into the distributed ledger, but for BNS it will include an additional part: the part in the Rings DHT where the did controller will be able to register and update the protocol and services provided by the DID through the Rings Network to register and update the protocols and services provided by the DID. So our DID proofs are more flexible and versatile than ENS, it supports any kind of cryptographic proofs, we have the implementation of secp256k1 and ed25519 curves now, and more in the future.
-
+\subsection{DID Methods \& Proofs}
 \begin{figure}[H]
   \label{arch}
   \includegraphics[width=\linewidth]{imgs/arch.png}
   \caption{OvervieDID archiecture}
 \end{figure}
 
-figure \ref{arch} shows the relationship between DID controller, DID document and DID subject.
+
+BNS, with the assistance of the Rings Network, has the potential to be the most powerful DID (Decentralized Identifier) method in history. BNS meets the four requirements set by the W3C for DIDs: decentralization, persistence, cryptographic verifiability, and resolvability. The BNS DID schema is specified as follows: did:bns:<protocol>:<did>.btc, where the "protocol" component supports a variety of services.
+
+DID proofs refer to how the relationship between the DID controller and the DID document is proved. For BNS, the DID document includes an additional part in the Rings DHT, where the DID controller can register and update the protocols and services provided by the DID through the Rings Network. BNS supports any kind of cryptographic proofs, including the implementation of secp256k1 and ed25519 curves. In contrast, only one out of 17 Ethereum-related DIDs has met the standards set by the W3C for DIDs.
+
+Figure \ref{arch} shows an overview of the architecture for the BNS DID system, depicting the relationship between the DID controller, DID document, and DID subject. With its powerful capabilities and flexible DID proofs, BNS has the potential to revolutionize the way decentralized identifiers are implemented and used.
 
 \section{Related Work}
 

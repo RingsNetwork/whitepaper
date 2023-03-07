@@ -5,27 +5,48 @@ W3C.
 \newblock Decentralized identifiers (dids) v1.0.
 \newblock \url{https://w3c.github.io/did-core/}, 2021.
 
-\bibitem{dns}
-P.~Mockapetris.
-\newblock A name service for the internet.
-\newblock pages 39--49, 1983.
-
 \bibitem{webassembly}
 WebAssembly~Community Group.
 \newblock {WebAssembly}, 2017.
 
-\bibitem{si}
-James~Dale Davidson and William Rees-Mogg.
-\newblock The sovereign individual: Mastering the transition to the information
-  age, 1997.
+\bibitem{nakamoto2008bitcoin}
+Satoshi Nakamoto.
+\newblock Bitcoin: A peer-to-peer electronic cash system.
+\newblock {\em Bitcoin.org}, 2008.
 
-\bibitem{W3C-DID-Use-Cases}
-W3C.
-\newblock Decentralized identifiers (dids) use cases and requirements v1.0.
-\newblock \url{https://w3c.github.io/did-use-cases/}, 2021.
+\bibitem{bano2017consensus}
+Shehar Bano, Alberto Sonnino, Mustafa Al-Bassam, Sarah Azouvi, Patrick McCorry,
+  Sarah Meiklejohn, and George Danezis.
+\newblock Consensus in the age of blockchains.
+\newblock {\em arXiv preprint arXiv:1711.03936}, 2017.
+
+\bibitem{antonopoulos2014mastering}
+Andreas Antonopoulos.
+\newblock {\em Mastering Bitcoin: Unlocking Digital Cryptocurrencies}.
+\newblock O'Reilly Media, Inc., 2014.
+
+\bibitem{wood2014ethereum}
+Gavin Wood.
+\newblock Ethereum: A secure decentralised generalised transaction ledger.
+\newblock In {\em Proceedings of the 2014 ACM conference on Computer supported
+  cooperative work and social computing}, pages 455--462. ACM, 2014.
+
+\bibitem{buterin2014ethereum}
+Vitalik Buterin.
+\newblock A next-generation smart contract and decentralized application
+  platform.
+\newblock {\em Ethereum}, 1(1):1--2, 2014.
+
+\bibitem{gervais2016security}
+Arthur Gervais, Ghassan~O Karame, Karl W{\"u}st, Vasileios Glykantzis, Hubert
+  Ritzdorf, and Srdjan Capkun.
+\newblock Security and scalability challenges in decentralized online social
+  networks.
+\newblock In {\em 2016 IEEE European Symposium on Security and Privacy
+  (EuroS\&P)}, pages 435--450. IEEE, 2016.
 
 \bibitem{chord}
-D.~Karger M. F.~Kaashoek I.~Stoica, R.~Morris and H.~Balakrishnan.
+D.~Karger I.~Stoica, R.~Morris.
 \newblock Chord: A scalable peer-to-peer lookup service for internet
   applications.
 \newblock \url{https://dl.acm.org/doi/10.1145/383059.383071}, 2001.
