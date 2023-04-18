@@ -135,7 +135,7 @@ The Rings Network architecture is modeled after the well-established seven-layer
 \item Transport Layer: The transport layer implements secure, real-time communication between network nodes through the implementation of the WebRTC protocol.
 \item Network Layer: The network layer employs the Chord algorithm to enable the distributed hash table (DHT) and decentralized identifier (DID) resolution functionalities.
 \item Protocol Layer: This layer outlines the utilization of elliptic curve cryptography to generate DIDs, DID sessions, and virtual DIDs for secure data storage and the creation of sub-rings.
-\item Application Layer: This layer caters to the needs of network developers, featuring two demonstration applications: Chatter and Dweb.
+\item Application Layer: This layer caters to the needs of network developers, featuring two demonstration applications: Chatter and dWeb.
 \end{itemize}
 % \begin{figure}[htpb]
 % \centering
@@ -186,7 +186,7 @@ The Rings Network architecture is modeled after the well-established seven-layer
 The design goal of Rings Network is to enable nodes to run in any environment, including browsers, mobile devices, Linux, Mac, Windows, etc. To achieve this, we have adopted a cross platform compile approach to build the code. For non-browser environments, we use pure Rust implementation that is independent of any system APIs, making our native implementation system agnostic. For browser environments, we compile the pure Rust implementation to WebAssembly (Wasm) and use web-sys, js-sys, and wasm-bindgen to glue it together, making our nodes fully functional in the browser.
 
 
-WebAssembly, or WASM, is a low-level binary format for executing code in web browsers. It provides a way for developers to write high-performance code in languages such as C, C++, and Rust, and then run that code in a browser with native performance. WebAssembly is designed to be fast and efficient, with a compact binary format that is easy to parse and execute. It uses a low-level instruction set, which makes it well-suited for demanding tasks such as cryptography, compression, and image processing.
+WebAssembly, or Wasm, is a low-level binary format for executing code in web browsers. It provides a way for developers to write high-performance code in languages such as C, C++, and Rust, and then run that code in a browser with native performance. WebAssembly is designed to be fast and efficient, with a compact binary format that is easy to parse and execute. It uses a low-level instruction set, which makes it well-suited for demanding tasks such as cryptography, compression, and image processing.
 
 \begin{figure}[htbp]
   \begin{tikzpicture}[node distance=3cm,auto,>=latex']
@@ -206,12 +206,12 @@ WebAssembly, or WASM, is a low-level binary format for executing code in web bro
   \draw[pattern=north east lines, pattern color=gray] (C.south west) -- (C.south east) -- (C.north east) -- (C.north west) -- cycle;
   \draw[->,dashed] (B) -- (C);
 \end{tikzpicture}
-\caption{How WASM module works}
+\caption{How wasm module works}
 \end{figure}
 
-The Rings Network provides multiple options for interacting with WebAssembly (WASM) modules, allowing developers to choose the method that best fits their needs.
+The Rings Network provides multiple options for interacting with WebAssembly (Wasm) modules, allowing developers to choose the method that best fits their needs.
 
-1.\textbf{Building Rings Network applications and extensions using WASM-based frameworks}: This option provides the power and efficiency of developing applications with WebAssembly (WASM). Developers can leverage the performance and security benefits of WASM to build scalable and secure applications that run natively in the browser.
+1.\textbf{Building Rings Network applications and extensions using wasm-based frameworks}: This option provides the power and efficiency of developing applications with WebAssembly (Wasm). Developers can leverage the performance and security benefits of Wasm to build scalable and secure applications that run natively in the browser.
 1. Building Rings Network applications and extensions using WASM-based frameworks such as Yew.
 
 2.\textbf{Loading WASM modules through the exported JavaScript module}: This option is ideal for developers who prefer to work in JavaScript and want to take advantage of the benefits that WASM modules can offer. The Rings Network provides a JavaScript module that can be imported and utilized in other projects, allowing developers to easily load and utilize WASM modules within their own applications.
@@ -395,7 +395,7 @@ In the Rings Network, DID is almost compatible with all elliptic curve algorithm
 
 \subsection{Albegraic DID}
 
-In Rings Network, the representation of Distributed Identifiers (DIDs) is achieved through the utilization of Finite Ring mathematics. The Finite Ring, not only serves as a ring-shaped topology in the network, but also as an abstract mathematical structure. The number of elements in this ring is represented by $2^{160}$, which is an astronomically large number, far surpassing the estimated number of ladders in the known universe. This results in the ring being sparse and discontinuous, and there is no direct relationship between $DID_n$ and $DID_{n+1}$. However, this mathematical structure allows us to place any data on the ring through the generation of appropriate Virtual DID (VID) values.
+In Rings Network, the representation of Decentralized Identifiers (DIDs) is achieved through the utilization of Finite Ring mathematics. The Finite Ring, not only serves as a ring-shaped topology in the network, but also as an abstract mathematical structure. The number of elements in this ring is represented by $2^{160}$, which is an astronomically large number, far surpassing the estimated number of ladders in the known universe. This results in the ring being sparse and discontinuous, and there is no direct relationship between $DID_n$ and $DID_{n+1}$. However, this mathematical structure allows us to place any data on the ring through the generation of appropriate Virtual DID (VID) values.
 
 The calculation of DIDs within the Rings Network is performed in the context of the Finite Ring, including operations such as size comparisons and arithmetic operations like addition and subtraction. Additionally, the generation of VIDs for Channels or Data is also carried out using Finite Ring calculations. For example, the VID for a fixed participant group is calculated as the sum of the individual DIDs, while the VID for an unread Offline message is calculated as the recipient DID plus the message sequence number, both of which are elements in the finite ring. The DHT structure in Rings Network implements algorithms such as Join, Lookup, and stabilization, all of which are calculated within the confines of the finite ring.
 
@@ -604,7 +604,7 @@ The ElGamal encryption algorithm can be used to implement a secret sharing schem
 
 
 
- Algorithm \ref{ElGamal SSSS} serves as an exemplification of the utilization of the ElGamal algorithm to realize Secret Sharing Schemes (SSSS). Given the fact that the Distributed IDs (DIDs) on the Chord Distributed Hash Table (DHT) form a finite ring, it is feasible to directly implement SSSS by leveraging this characteristic. By executing the SSSS protocol over the Chord DHT, the confidentiality and security of the secret is ensured through its decentralized distribution and storage. Each node within the DHT only assumes responsibility for retaining its respective share, which remains encrypted and can only be accessed through the usage of its corresponding private key. This attributes the Chord DHT with a superior suitability as a platform for implementing secure SSSS. The algorithm for implementing a Secret Sharing Scheme (SSSS) over a finite ring can be represented as lgorithm \ref{FR SSSS}
+ Algorithm \ref{ElGamal SSSS} serves as an exemplification of the utilization of the ElGamal algorithm to realize Secret Sharing Schemes (SSSS). Given the fact that the Decentralized IDs (DIDs) on the Chord Distributed Hash Table (DHT) form a finite ring, it is feasible to directly implement SSSS by leveraging this characteristic. By executing the SSSS protocol over the Chord DHT, the confidentiality and security of the secret is ensured through its decentralized distribution and storage. Each node within the DHT only assumes responsibility for retaining its respective share, which remains encrypted and can only be accessed through the usage of its corresponding private key. This attributes the Chord DHT with a superior suitability as a platform for implementing secure SSSS. The algorithm for implementing a Secret Sharing Scheme (SSSS) over a finite ring can be represented as lgorithm \ref{FR SSSS}
 
  \subsection{Chunking}
 
