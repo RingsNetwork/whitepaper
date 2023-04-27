@@ -1,0 +1,241 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{color}
+\usepackage{cite}
+\usepackage{draftwatermark}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage{titling}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{abstract}
+\usepackage[inkscapeformat=png]{svg}
+\usepackage{mathtools}
+\usepackage{extarrows}
+\usepackage{float}
+\usepackage[caption = false]{subfig}
+\usepackage{geometry}
+\geometry{bottom=2cm}
+
+\newcommand{\BTX}{\texttt{BTX}}
+\newcommand{\XTX}{\texttt{XTX}}
+
+\newcommand{\Enc}{\textsf{Enc}}
+\newcommand{\EncGen}{\textsf{EncGen}}
+\newcommand{\EncSign}{\textsf{EncSign}}
+\newcommand{\EncVer}{\textsf{EncVrfy}}
+
+\newcommand{\DecSig}{\textsf{DecSig}}
+\newcommand{\KeyGen}{\textsf{Gen}}
+\newcommand{\Sign}{\textsf{Sign}}
+\newcommand{\Verify}{\textsf{Vrfy}}
+\newcommand{\Rec}{\textsf{Rec}}
+\newcommand{\RecKey}{\textsf{RecKey}}
+\newcommand{\hatsigma}{\hat{\sigma}}
+
+\newcommand{\DLGen}{\textsf{DLGen}}
+\newcommand{\DLProve}{\textsf{DLProve}}
+\newcommand{\DLVrfy}{\textsf{DLVrfy}}
+
+\newcommand{\InitTx}{\textsf{InitTx}}
+\newcommand{\SignTx}{\textsf{SignTx}}
+\newcommand{\VrfyTx}{\textsf{VrfyTx}}
+\newcommand{\PubTx}{\textsf{PubTx}}
+\newcommand{\WatchTx}{\textsf{WatchTx}}
+\newcommand{\RecSig}{\textsf{RecSig}}
+
+\newcommand{\skSign}{sk_S}
+\newcommand{\pkSign}{pk_S}
+\newcommand{\kSign}{(\skSign,\pkSign)}
+\newcommand{\skEnc}{sk_E}
+\newcommand{\pkEnc}{pk_E}
+\newcommand{\kEnc}{(\skEnc, \pkEnc)}
+\newcommand{\rec}{\delta}
+
+\newcommand{\bin}{\{0,1\}}
+
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\HH}{\mathbb{H}}
+
+
+
+\usetikzlibrary{shapes,arrows,positioning,patterns,through}
+\SetWatermarkText{WIP}
+\SetWatermarkScale{1}
+\setlength\parskip{.5\baselineskip}
+
+\tikzset{
+  dot node/.style={
+    shape=circle,
+    fill=white,
+    draw,
+    inner sep=+0pt,
+    minimum size=+5mm
+  },
+  dotdot node/.style 2 args={
+    dot node,
+    label={[shape=circle,fill=black,outer sep=+0pt,inner sep=+0pt,minimum size=+3mm,name=ddd-#1,#2]center:}
+  },
+  arc style/.style={
+    |<->|,
+    shorten >=+-.5\pgflinewidth,
+    shorten <=+-.5\pgflinewidth,
+  }
+}
+
+\definecolor{pagecolor}{rgb}{1,1,1}
+\pagecolor{pagecolor}
+
+
+\author{
+  Ryan J. Kung \\ ryankung@ieee.org
+}
+\title{Enhancing Atomic Swaps with Rings Network}
+
+\begin{document}
+\twocolumn[
+  \begin{@twocolumnfalse}
+
+\maketitle
+\begin{abstract}
+  Atomic swap is a decentralized cross-chain trading method that does not require trust in third parties or centralized institutions. However, its current implementation faces many problems, and its essence is the lack of a decentralized channel, which often results in many steps of atomic swaps being performed through centralized facilities. This paper will discuss how to use the purely p2p feature of Rings Network to enhance atomic swaps, allowing them to break free from reliance on centralized facilities.
+
+  ~\\
+  ~\\
+\end{abstract}
+
+\end{@twocolumnfalse}
+]
+\section{Introduction}
+Atomic swap was first introduced in 2013\cite{nolan2013atomic} by Tier Nolan on the BitcoinTalk forum, and its first implementation was done by Decred and Litecoin in 2017\cite{wall2017decred, biryukov2017atomic}. It has since been confirmed that atomic swap can be implemented on almost all blockchain platforms, including Monero\cite{grover2018bitcoin}, Bitcoin, and Ethereum\cite{poon2016bitcoin}. It is a trustless cross-chain method that enables decentralized trading without the need for intermediaries.
+
+Although atomic swaps require different protocols and details to be implemented for different cryptocurrencies and blockchains (such as Monero-Bitcoin, Ethereum-Bitcoin, etc.), they can generally be broken down into three steps: negotiation, transaction and signing, and asset exchange. During the negotiation phase, participants agree upon the terms and conditions of the exchange, including the types and quantities of assets to be traded and any necessary security measures. Both participants then create and sign the transaction, and send the signature to the other party to prove their transaction intent. Once the transaction is confirmed, both participants can use the other party's hash to unlock and transfer assets to their own address.
+
+
+Despite being viewed as decentralized transactions, atomic swaps rely on interactions between participants, and many steps in the process require online or offline exchanges between parties. These interactions can become centralized, which undermines the decentralized nature of the transaction. To prevent this, participants should be vigilant about maintaining their privacy and implementing protective measures to safeguard against third-party interference or centralized institutions attempting to access sensitive information during the atomic swap process.
+
+The Rings Network is a decentralized channel that can be introduced to address these centralized issues. This browser-friendly peer-to-peer network can be compiled to run in web assembly and utilizes the Chord algorithm to construct highly scalable and high-performance real-time network channels. By leveraging the Rings Network, atomic swaps can benefit from a decentralized channel that offers enhanced privacy, security, and scalability, while also eliminating the need for centralized intermediaries.
+
+
+\section{Prerequisites}
+As atomic swaps have different implementations on various heterogeneous blockchains, it is necessary to define and differentiate them. We will define the atomic swap process between different chains using the meta-language from Grover's work \cite{grover2018bitcoin} including InitTx(), Sign(), VrfyTx(), Vrfy(), PubTx() and RecSig().
+
+\begin{itemize}[itemsep=2pt,topsep=0pt,parsep=0pt]
+  \item $\InitTx()$: Used to initialize a transaction by setting necessary parameters.
+
+  \item $\Sign()$: Used to digitally sign a transaction using the private key of the participant.
+
+  \item $\VrfyTx()$: Used to verify the validity of a transaction by checking its input and output addresses, amounts being exchanged, and any necessary conditions.
+
+  \item $\Verify()$: Used to verify the validity of a digital signature by checking it against the corresponding public key.
+
+  \item $\PubTx()$: Used to publish a transaction to the blockchain, making it a permanent record.
+
+  \item $\RecSig()$: Used to receive a signature from the other party in a transaction.
+\end{itemize}
+\subsection{Bitcoin-Monero}
+\begin{figure*}[h]
+    \begin{table}[H]
+        \centering
+        {\renewcommand{\arraystretch}{0.1}%
+      \begin{tabular}{ | l c l | }
+        \hline
+        \multicolumn{1}{|c}{Alice (XMR$\rightarrow$BTC)} &  & \multicolumn{1}{c|}{Bob (BTC$\rightarrow$XMR)} \\
+        $k^v_a, k^s_a \xleftarrow{R} [1, l-1]$ & & $k^v_b, k^s_b \xleftarrow{R} [1, l-1]$ \\
+        $b_a,b^r_a \xleftarrow{R} [1, n-1]$ & & $b_b,b^r_b \xleftarrow{R} [1, n-1]$ \\
+        $B_a \leftarrow b_aH$ & & $B_b \leftarrow b_bH$ \\
+        $B^r_a \leftarrow b^r_aH$ & & $B^r_b \leftarrow b^r_bH$ \\
+        $(z_a, K^s_a, B^s_a) \leftarrow \DLProve(k^s_a)$ & & $(z_b, K^s_b, B^s_b) \leftarrow \DLProve(k^s_b)$ \\
+                                               & & $s \xleftarrow{R} [0, 2^{256}]$ \\
+                                               & & $h_s \gets \texttt{SHA256}(s)$ \\
+                                               & & \\
+        \multicolumn{3}{|c|}{$\xlongleftrightarrow{\langle k^v_i, K^s_i, B_i, B^s_i, B^r_i, z_i, h_s \rangle \  \forall i \in \{a, b\}}$} \\
+         & $k^v \equiv k^v_a + k^v_b \pmod l$ & \\
+          & $K^v = k^vG$, \ $K^s = K^s_a + K^s_b$ & \\
+          \DLVrfy$(K^s_b, B^s_b, z_b) \stackrel{?}{=} 1$ & & \DLVrfy$(K^s_a, B^s_a, z_a) \stackrel{?}{=} 1$ \\
+          & & $(\BTX_\textit{lock}$, \parbox{3cm}{$\BTX_\textit{refund})\\ \gets$ \InitTx$(B_a, B_b, B^r_a, B^r_b)$} \\
+          & & $\sigma_r' \gets$ \Sign$(b^r_b, \BTX_\textit{refund})$ \\
+
+          \multicolumn{3}{|c|}{$\xleftarrow{\langle \BTX_\textit{lock}, \BTX_\textit{refund}, \BTX_\textit{spend}, \sigma_r' \rangle}$} \\
+
+          \parbox{1cm}{\VrfyTx$(\BTX_\textit{lock}$, $\BTX_\textit{refund}, B_a, B_b, B^r_a, B^r_b, h_s) \\ \stackrel{?}{=} 1$} & & \\
+          \Verify$(B^r_b, \BTX_\textit{refund}, \sigma_r') \stackrel{?}{=} 1$ & & \\
+          $\hatsigma_1' \gets \EncSign(b^r_a, B^s_b, \BTX_\textit{spend})$ & & \\
+          $\delta' \gets \RecKey(B^s_b, \hatsigma_1')$ & & \\
+          $\sigma_r'' \gets$ \Sign$(b^r_a, \BTX_\textit{refund})$ & & \\
+
+          \multicolumn{3}{|c|}{$\xrightarrow{\langle \sigma_r'', \hatsigma_1' \rangle}$} \\
+
+          & & $\EncVer(B^r_a, B^s_b, \BTX_\textit{spend}, \hatsigma_1') \stackrel{?}{=} 1$ \\
+          & & \Verify$(B^r_a, \BTX_\textit{refund}, \sigma_r'') \stackrel{?}{=} 1$ \\
+          %& & \Verify$(B^r_a, \BTX_\textit{spend}, \sigma_2') \stackrel{?}{=} 1$ \\
+          & & $\BTX_\textit{buy} \gets$ \InitTx$(\BTX_\textit{lock})$ \\
+          & & $\hatsigma_1 \gets \EncSign(b_b, B^s_a, \BTX_\textit{buy})$ \\
+          & & $\delta \gets \RecKey(B^s_a, \hatsigma_1)$ \\
+          & & \PubTx$(\BTX_\textit{lock})$ \\
+
+          \multicolumn{3}{|c|}{$\xleftarrow{\langle \BTX_\textit{buy}, \hatsigma_1 \rangle}$} \\
+
+          $\EncVer(B_b, B^s_a, \BTX_\textit{buy}, \hatsigma_1) \stackrel{?}{=} 1$ & & \\
+          \WatchTx$(\BTX_\textit{lock}) \stackrel{?}{=} 1$ & & \\
+          \multicolumn{3}{|c|}{$\dots$} \\
+
+          $\XTX_\textit{lock} \gets$ \InitTx$(K^v, K^s)$ & & \\
+          \PubTx$(\XTX_\textit{lock})$ & & \\
+
+          \multicolumn{3}{|c|}{$\dots$} \\
+          & & \WatchTx$(K^v, K^s)$ w/ $(k^v, K^s) \stackrel{?}{=} 1$ \\
+
+          \multicolumn{3}{|c|}{$\xleftarrow{\langle s \rangle}$} \\
+
+          $\sigma_1 \gets \DecSig(k^s_a, \hatsigma_1)$ & & \\
+          $\sigma_2 \gets \Sign(b_a, \BTX_\textit{buy})$ & & \\
+          $\sigma := (\sigma_1, \sigma_2)$ & & \\
+          \PubTx$(\BTX_\textit{buy}, \sigma, s)$ & & \\
+
+          & & \WatchTx$(\BTX_\textit{buy}) \stackrel{?}{=} 1$ \\
+          \multicolumn{3}{|c|}{$\dots$} \\
+
+          & & $(\sigma_1, \sigma_2) \gets \RecSig(\BTX_\textit{buy})$ \\
+          & & $k^s_a \gets \Rec(\sigma_1, \delta)$ \\
+          & & $k^s \equiv k^s_a + k^s_b \pmod l$ \\
+          & & $\langle k^v, k^s \rangle$ \\
+        \hline
+      \end{tabular}}
+    \end{table}
+  \caption{Protocol execution between Alice and Bob for a successful swap \cite{grover2018bitcoin}}
+  \label{fig:protocol}
+\end{figure*}
+
+As shown in Figure \ref{fig:protocol}, the Bitcoin to Monero transaction process can be divided into four main steps. First, Alice and Bob independently generate discrete logarithm proofs using calculations over elliptic curve groups. They then exchange and verify these proofs.
+
+Subsequently, Bob signs the proof he received from Alice and sends it back to her. Alice verifies the signature and forwards the signed proof to Bob. Afterward, Bob proceeds to add the transaction to the blockchain. Upon receiving confirmation that the transaction has been added to the chain, Alice also generates a lock and adds it to the blockchain.
+
+Finally, both Alice and Bob wait for on-chain notifications and complete the swap.
+
+\subsection{Bitcoin-Decred}
+
+\subsection{Bitcoin-Ethereum}
+\subsection{Bitcoin-ERC20}
+\subsection{ERC20-ERC20}
+
+\section{Implementation}
+
+\section{Conclusion}
+abcd
+\bibliographystyle{unsrt}
+\bibliography{./cites}
+\end{document}

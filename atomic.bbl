@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{nolan2013atomic}
+Tier Nolan.
+\newblock Atomic cross-chain trading, 2013.
+
+\bibitem{wall2017decred}
+Eric Wall.
+\newblock Decred and litecoin complete first-ever cross-chain atomic swap.
+\newblock {\em Bitcoin Magazine}, 9 2017.
+
+\bibitem{biryukov2017atomic}
+Alex Biryukov, Dmitry Khovratovich, and Ivan Pustogarov.
+\newblock Atomic cross-chain swaps.
+\newblock In {\em Proceedings of the 2017 ACM SIGSAC Conference on Computer and
+  Communications Security}, pages 1--15, 2017.
+
+\bibitem{grover2018bitcoin}
+Sarthak Grover, Himanshu Gahlot, and Rajesh Kumar.
+\newblock Bitcoin-monero cross-chain atomic swap.
+\newblock In {\em 2018 IEEE 4th International Conference on Collaboration and
+  Internet Computing (CIC)}, pages 244--247. IEEE, 2018.
+
+\bibitem{poon2016bitcoin}
+Joseph Poon and Thaddeus Dryja.
+\newblock Bitcoin lightning network: Scalable off-chain instant payments.
+\newblock {\em Bitcoin Lightning Network}, 2016.
+
+\end{thebibliography}
