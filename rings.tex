@@ -22,6 +22,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{abstract}
 
+\date{Feb, 10, 2023}
 \usetikzlibrary{shapes,arrows,positioning,patterns,through}
 \SetWatermarkText{Preview}
 \SetWatermarkScale{1}
@@ -54,14 +55,13 @@
 }
 \title{Rings: A peer-to-peer network for sovereign age}
 
-
 \begin{document}
 \twocolumn[
   \begin{@twocolumnfalse}
     \maketitle
     \begin{abstract}
 
-      Rings Network is a decentralized peer-to-peer network that has built a more decentralized, anonymous and privacy-oriented data sovereignty network based on Chord computation. Rings Network is built with a communication layer based on WebAssembly, which allows it to run directly in the browser and connect directly between browsers via the webRTC protocol, further solving the problem of the modern Internet being controlled by centralized entities. Rings Network supports the use of elliptic curves as DIDs for proofs, and its stability is sufficient to support a large number of nodes and efficient lookups, making the connection and data exchange between sovereign entities more secure, efficient, and direct. This paper introduces the four-layer architecture of Rings Network and analyzes Rings Network from various aspects, including network, traffic, orderer, security, and shows the unlimited possibilities of Rings Network itself and as an application platform.
+      Rings Network is a decentralized peer-to-peer network that has built a more decentralized, anonymous and privacy-oriented data sovereignty network based on Chord computation. Rings Network is built with a communication layer based on WebAssembly, which allows it to run directly in the browser and connect directly between browsers via the webRTC protocol, further solving the problem of the modern Internet being controlled by centralized entities. Rings Network supports the use of elliptic curves as DIDs for proofs, and its stability is sufficient to support a large number of nodes and efficient lookups, making the connection and data exchange between sovereign entities more secure, efficient, and direct. This paper introduces the four-layer architecture of Rings Network and analyzes Rings Network from various aspects, including network, traffic, sequancer, security, and shows the unlimited possibilities of Rings Network itself and as an application platform.
 
   ~\\
   ~\\
@@ -630,15 +630,15 @@ The ElGamal encryption algorithm can be used to implement a secret sharing schem
 
 Algorithm \ref{alg:e2e_chunking} shows how a common chunking algorithm works. In this algorithm, the input data is divided into a number of chunks equal to the ceiling of the length of the data divided by the chunk size. For each iteration of the loop, a chunk of the specified size is extracted from the data and added to the list of chunks. The list of chunks is then returned as the output of the algorithm.
 
-\section{The Orderer}
+\section{The sequancer}
 
-An orderer in a distributed system is a component responsible for determining the order in which messages are delivered or transactions are executed. In other words, the orderer ensures that events in the system occur in a predictable and consistent order, even when they originate from different sources. This is important for maintaining the integrity and consistency of the system and avoiding conflicts or inconsistencies.
+An sequancer in a distributed system is a component responsible for determining the order in which messages are delivered or transactions are executed. In other words, the sequancer ensures that events in the system occur in a predictable and consistent order, even when they originate from different sources. This is important for maintaining the integrity and consistency of the system and avoiding conflicts or inconsistencies.
 
 Lamport described the order of messages as a result of time-stamping each message that is sent between nodes in a distributed system. This involves assigning a unique logical timestamp to each message, which represents the logical order in which the messages were generated. The timestamps are used to determine the order in which the messages should be processed, so that the recipient node can ensure that messages are processed in a consistent and reliable manner, regardless of the order in which they were actually received.
 
-\subsection{Sidecar Orderer}
+\subsection{Sidecar Sequancer}
 
-Lamport timestamps, as outlined in Algorithm \ref{lamport ts}, can facilitate simple message ordering in distributed systems. However, it is not secure and can be prone to attacks. Hence, the Sidecar Orderer mechanism is introduced as a more secure alternative.
+Lamport timestamps, as outlined in Algorithm \ref{lamport ts}, can facilitate simple message ordering in distributed systems. However, it is not secure and can be prone to attacks. Hence, the Sidecar Sequancer mechanism is introduced as a more secure alternative.
 
 \begin{algorithm}[h]
 \caption{Lamport timestamp}
@@ -654,15 +654,15 @@ Lamport timestamps, as outlined in Algorithm \ref{lamport ts}, can facilitate si
 \end{algorithm}
 
 
-In a distributed system, the Sidecar Orderer operates as an external entity, not integrated into the system itself. Instead of relying on an internal formal algorithm for ordering, the system utilizes an external witness to establish message ordering.
-In the context of Rings Network, message ordering is achieved through the utilization of a Sidecar Orderer. This can be a blockchain technology such as Ethereum, Bitcoin, or any other. Messages requiring a determined order must prove, through the time-stamping capabilities of the blockchain, that their transmission time was not earlier than a specified timestamp.
+In a distributed system, the Sidecar Sequancer operates as an external entity, not integrated into the system itself. Instead of relying on an internal formal algorithm for ordering, the system utilizes an external witness to establish message ordering.
+In the context of Rings Network, message ordering is achieved through the utilization of a Sidecar Sequancer. This can be a blockchain technology such as Ethereum, Bitcoin, or any other. Messages requiring a determined order must prove, through the time-stamping capabilities of the blockchain, that their transmission time was not earlier than a specified timestamp.
 As a validator, Rings Network supports the ordering of messages from different sources. For instance, Message A employs the hash $\sigma$ of a Bitcoin block to demonstrate that its time is not later than $t_a$, while Message B utilizes the hash $\beta$ of a Solana block to prove that its time is not later than $t_b$. Given that $t_a < t_b$, Message A precedes Message B.
 
-However, the Sidecar Orderer is limited in its capabilities as it can only provide proof of the latest possible time for a message. For instance, when Message A asserts time $t0$, it can only demonstrate that its transmission time is not before $t0$, thus constituting a proof of the latest time. Additionally, the varying granularity of proofs from different witnesses often results in a partial order of messages, which may temporarily result in parallel timelines.
+However, the Sidecar Sequancer is limited in its capabilities as it can only provide proof of the latest possible time for a message. For instance, when Message A asserts time $t0$, it can only demonstrate that its transmission time is not before $t0$, thus constituting a proof of the latest time. Additionally, the varying granularity of proofs from different witnesses often results in a partial order of messages, which may temporarily result in parallel timelines.
 
 
 \subsection{Byzantine fault tolerance}
-Although Rings Network supports Sidecar Orderer, it does not aim to achieve Byzantine Fault Tolerance (BFT). This is because the implementation of the Rings Network Orderer relies on an external BFT, which means that it can run smoothly without the need for implementing its own consensus system. The use of an external BFT allows Rings Network to focus on other aspects of its design, without the need for in-depth expertise in consensus algorithms. This also means that Rings Network can take advantage of the security and robustness of existing BFT systems, which have been widely tested and proven in various applications. As a result, Rings Network can provide a secure and efficient solution for message ordering in distributed systems without having to deal with the complex problems of consensus algorithms.
+Although Rings Network supports Sidecar Sequancer, it does not aim to achieve Byzantine Fault Tolerance (BFT). This is because the implementation of the Rings Network Sequancer relies on an external BFT, which means that it can run smoothly without the need for implementing its own consensus system. The use of an external BFT allows Rings Network to focus on other aspects of its design, without the need for in-depth expertise in consensus algorithms. This also means that Rings Network can take advantage of the security and robustness of existing BFT systems, which have been widely tested and proven in various applications. As a result, Rings Network can provide a secure and efficient solution for message ordering in distributed systems without having to deal with the complex problems of consensus algorithms.
 
 \subsection{Ranking Protocol}
 
@@ -780,7 +780,7 @@ As a decentralized platform, Rings Network is susceptible to various security ri
 \item Sybil Attack: A Sybil attack represents a malicious attempt to undermine the trust and control of a network by creating multiple fake identities. To counter this threat, Rings Network implements the Ranking protocol, which enhances network security through local and global ranking mechanisms. New nodes, which possess a low ranking rate, find it challenging to swiftly earn the credibility of neighboring nodes, thereby deterring Sybil attacks.
 
 \item Replay Attack:
-  A replay attack constitutes a malicious attempt to disrupt a network by intercepting and retransmitting a legitimate network transmission. To counteract such threats, Rings Network employs digital signatures and cryptographic hashes to guarantee the authenticity of messages and prevent their repeat usage. Additionally, the Sidecar Orderer serves as an indispensable and dependable tool for ordering critical non-replayable messages in Rings Network.
+  A replay attack constitutes a malicious attempt to disrupt a network by intercepting and retransmitting a legitimate network transmission. To counteract such threats, Rings Network employs digital signatures and cryptographic hashes to guarantee the authenticity of messages and prevent their repeat usage. Additionally, the Sidecar Sequancer serves as an indispensable and dependable tool for ordering critical non-replayable messages in Rings Network.
 
 \item Man-in-the-Middle Attack:
   A man-in-the-middle (MITM) attack represents a malicious attempt to intercept and potentially modify or eavesdrop on communication between two parties. To prevent such attacks in Rings Network, the validation of elliptic curve signatures and the implementation of end-to-end encryption render such attacks entirely infeasible.
