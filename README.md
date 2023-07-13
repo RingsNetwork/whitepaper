@@ -6,7 +6,7 @@
 Rings Whitepaper
 ===============
 
-This repo is about whitepapers of rings network, you can find tex source and compiled files here.
+This repo is about whitepapers of rings network, you can find tex sources and compiled files here.
 
 The Rings Paper
 ---------------
